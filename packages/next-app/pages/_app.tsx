@@ -1,15 +1,14 @@
-import * as React from 'react';
-import type { AppProps } from 'next/app';
-import NextHead from 'next/head';
-import '../styles/globals.css';
+import "../styles/globals.css";
+import type { AppProps } from "next/app";
+import NextHead from "next/head";
 
 // Imports
-import { Provider, chain, createClient, defaultChains } from 'wagmi';
-import { InjectedConnector } from 'wagmi/connectors/injected';
-import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
-import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet';
+import { Provider, chain, createClient, defaultChains } from "wagmi";
+import { InjectedConnector } from "wagmi/connectors/injected";
+import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
+import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
 
-import { useIsMounted } from '../hooks';
+import { useIsMounted } from "@/hooks";
 
 // Get environment variables
 const alchemyId = process.env.NEXT_PUBLIC_ALCHEMY_ID as string;
@@ -26,14 +25,14 @@ const client = createClient({
     const chain = chains.find((x) => x.id === chainId) ?? defaultChain;
     const rpcUrl = chain.rpcUrls.alchemy
       ? `${chain.rpcUrls.alchemy}/${alchemyId}`
-      : typeof chain.rpcUrls.default === 'string'
+      : typeof chain.rpcUrls.default === "string"
       ? chain.rpcUrls.default
       : chain.rpcUrls.default[0];
     return [
       new InjectedConnector(),
       new CoinbaseWalletConnector({
         options: {
-          appName: 'create-web3',
+          appName: "create-web3",
           chainId: chain.id,
           jsonRpcUrl: rpcUrl,
         },

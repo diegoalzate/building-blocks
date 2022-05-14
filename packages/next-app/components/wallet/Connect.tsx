@@ -1,7 +1,7 @@
-import * as React from 'react';
-import { useAccount, useConnect } from 'wagmi';
+import * as React from "react";
+import { useAccount, useConnect } from "wagmi";
 
-import { useIsMounted } from '../../hooks';
+import { useIsMounted } from "../../hooks";
 
 export const Connect = () => {
   const isMounted = useIsMounted();
@@ -19,6 +19,7 @@ export const Connect = () => {
         <>
           {connectors.map((x, index) => (
             <button
+              className="border m-1 p-1"
               disabled={
                 isMounted
                   ? !x.ready || x.id === accountData?.connector?.id

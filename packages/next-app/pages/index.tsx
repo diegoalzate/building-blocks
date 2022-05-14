@@ -2,7 +2,8 @@ import Head from "next/head";
 import { useConnect } from "wagmi";
 
 import { Connect, Disconnect, SwitchNetwork } from "../components/wallet";
-import { Greeter } from "../components/contract/Greeter";
+import { CreateMultisig } from "../components/contract/CreateMultisig";
+import { GetAllMultisigs } from "../components/contract/GetAllMultisigs";
 
 import { useNetwork } from "wagmi";
 import { NETWORK_ID } from "@/config";
@@ -29,11 +30,13 @@ export default function Home() {
             {activeChain && NETWORK_ID !== activeChain.id ? (
               <SwitchNetwork />
             ) : (
-              <Greeter />
+              <>
+                <GetAllMultisigs />
+                <CreateMultisig />
+              </>
             )}
           </>
         )}
-        <h1 className="text-red-700 text-3xl">tailwind test</h1>
       </main>
     </div>
   );

@@ -1,0 +1,102 @@
+{
+  "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "internalType": "string",
+          "name": "societyName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "deposit",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    }
+  ],
+  "transactionHash": "0xf6b7baf7cac7114f5c36c3cd356ba157d8efd37338c67ae7b70187bbe4eeb958",
+  "receipt": {
+    "to": null,
+    "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+    "contractAddress": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+    "transactionIndex": 0,
+    "gasUsed": "132847",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0x2d113bf10f7fa006da49368b0acf7409d7d3fea2b320fb0f131ad3a9efcbcabb",
+    "transactionHash": "0xf6b7baf7cac7114f5c36c3cd356ba157d8efd37338c67ae7b70187bbe4eeb958",
+    "logs": [],
+    "blockNumber": 2,
+    "cumulativeGasUsed": "132847",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [
+    "0x0000000000000000000000000000000000000000",
+    "Test Society",
+    "10"
+  ],
+  "numDeployments": 1,
+  "solcInputHash": "fd3211d1b2d1b1330fcb1684efd59d83",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.10+commit.fc410830\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"societyName\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"deposit\",\"type\":\"string\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/Multisig.sol\":\"Multisig\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"contracts/Multisig.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\r\\npragma solidity ^0.8.10;\\r\\n\\r\\ncontract Multisig {\\r\\n    address _owner;\\r\\n    string _societyName;\\r\\n    string _deposit;\\r\\n\\r\\n    constructor(\\r\\n        address owner,\\r\\n        string memory societyName,\\r\\n        string memory deposit\\r\\n    ) {\\r\\n        _owner = owner;\\r\\n        _societyName = societyName;\\r\\n        _deposit = deposit;\\r\\n    }\\r\\n}\\r\\n\",\"keccak256\":\"0x298640cbbd3d8a3ec40967f5f296a9f2bc04e7306112b385b6c83abb5c0c26f3\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b5060405161046038038061046083398181016040528101906100329190610327565b826000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555081600190805190602001906100889291906100a8565b50806002908051906020019061009f9291906100a8565b50505050610413565b8280546100b4906103e1565b90600052602060002090601f0160209004810192826100d6576000855561011d565b82601f106100ef57805160ff191683800117855561011d565b8280016001018555821561011d579182015b8281111561011c578251825591602001919060010190610101565b5b50905061012a919061012e565b5090565b5b8082111561014757600081600090555060010161012f565b5090565b6000604051905090565b600080fd5b600080fd5b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b600061018a8261015f565b9050919050565b61019a8161017f565b81146101a557600080fd5b50565b6000815190506101b781610191565b92915050565b600080fd5b600080fd5b6000601f19601f8301169050919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b610210826101c7565b810181811067ffffffffffffffff8211171561022f5761022e6101d8565b5b80604052505050565b600061024261014b565b905061024e8282610207565b919050565b600067ffffffffffffffff82111561026e5761026d6101d8565b5b610277826101c7565b9050602081019050919050565b60005b838110156102a2578082015181840152602081019050610287565b838111156102b1576000848401525b50505050565b60006102ca6102c584610253565b610238565b9050828152602081018484840111156102e6576102e56101c2565b5b6102f1848285610284565b509392505050565b600082601f83011261030e5761030d6101bd565b5b815161031e8482602086016102b7565b91505092915050565b6000806000606084860312156103405761033f610155565b5b600061034e868287016101a8565b935050602084015167ffffffffffffffff81111561036f5761036e61015a565b5b61037b868287016102f9565b925050604084015167ffffffffffffffff81111561039c5761039b61015a565b5b6103a8868287016102f9565b9150509250925092565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052602260045260246000fd5b600060028204905060018216806103f957607f821691505b6020821081141561040d5761040c6103b2565b5b50919050565b603f806104216000396000f3fe6080604052600080fdfea264697066735822122007c655337dbc7963296e7433583cce6ed2d484204847398fd77066aa5666aa4b64736f6c634300080a0033",
+  "deployedBytecode": "0x6080604052600080fdfea264697066735822122007c655337dbc7963296e7433583cce6ed2d484204847398fd77066aa5666aa4b64736f6c634300080a0033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 52,
+        "contract": "contracts/Multisig.sol:Multisig",
+        "label": "_owner",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_address"
+      },
+      {
+        "astId": 54,
+        "contract": "contracts/Multisig.sol:Multisig",
+        "label": "_societyName",
+        "offset": 0,
+        "slot": "1",
+        "type": "t_string_storage"
+      },
+      {
+        "astId": 56,
+        "contract": "contracts/Multisig.sol:Multisig",
+        "label": "_deposit",
+        "offset": 0,
+        "slot": "2",
+        "type": "t_string_storage"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_string_storage": {
+        "encoding": "bytes",
+        "label": "string",
+        "numberOfBytes": "32"
+      }
+    }
+  }
+}

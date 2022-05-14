@@ -4,28 +4,33 @@
       "name": "localhost",
       "chainId": "31337",
       "contracts": {
-        "Greeter": {
+        "MultisigFactory": {
           "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
           "abi": [
             {
               "inputs": [
                 {
-                  "internalType": "string",
-                  "name": "_greeting",
-                  "type": "string"
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
                 }
               ],
-              "stateMutability": "nonpayable",
-              "type": "constructor"
-            },
-            {
-              "inputs": [],
-              "name": "greet",
+              "name": "allMultisig",
               "outputs": [
                 {
-                  "internalType": "string",
-                  "name": "",
-                  "type": "string"
+                  "internalType": "uint256",
+                  "name": "_multisigIndex",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "address",
+                  "name": "_owner",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "_contract",
+                  "type": "address"
                 }
               ],
               "stateMutability": "view",
@@ -35,14 +40,94 @@
               "inputs": [
                 {
                   "internalType": "string",
-                  "name": "_greeting",
+                  "name": "societyName",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string",
+                  "name": "deposit",
                   "type": "string"
                 }
               ],
-              "name": "setGreeting",
+              "name": "createMultisig",
               "outputs": [],
               "stateMutability": "nonpayable",
               "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "_tokenId",
+                  "type": "uint256"
+                }
+              ],
+              "name": "getMultisigDetails",
+              "outputs": [
+                {
+                  "components": [
+                    {
+                      "internalType": "uint256",
+                      "name": "_multisigIndex",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "address",
+                      "name": "_owner",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "address",
+                      "name": "_contract",
+                      "type": "address"
+                    }
+                  ],
+                  "internalType": "struct MultisigFactory.MultisigStruct",
+                  "name": "",
+                  "type": "tuple"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "numMultisigs",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            }
+          ]
+        },
+        "Multisig": {
+          "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+          "abi": [
+            {
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "owner",
+                  "type": "address"
+                },
+                {
+                  "internalType": "string",
+                  "name": "societyName",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string",
+                  "name": "deposit",
+                  "type": "string"
+                }
+              ],
+              "stateMutability": "nonpayable",
+              "type": "constructor"
             }
           ]
         }

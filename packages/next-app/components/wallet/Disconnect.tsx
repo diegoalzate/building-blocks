@@ -1,4 +1,4 @@
-import { useDisconnect, useConnect, useAccount } from 'wagmi';
+import { useDisconnect, useConnect, useAccount } from "wagmi";
 
 export const Disconnect = () => {
   const { disconnect } = useDisconnect();
@@ -10,7 +10,7 @@ export const Disconnect = () => {
       {activeConnector && accountData && (
         <>
           <div>Connected with address : {accountData?.address}</div>
-          <button onClick={() => disconnect()}>
+          <button className="border m-1 p-1" onClick={() => disconnect()}>
             Disconnect from {activeConnector?.name}
           </button>
         </>

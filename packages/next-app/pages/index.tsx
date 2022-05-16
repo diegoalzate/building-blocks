@@ -2,8 +2,7 @@ import Head from "next/head";
 import { useConnect } from "wagmi";
 
 import { Connect, Disconnect, SwitchNetwork } from "../components/wallet";
-import { CreateMultisig } from "../components/contract/CreateMultisig";
-import { GetAllMultisigs } from "../components/contract/GetAllMultisigs";
+import { CreateMultisig, GetAllMultisigs } from "@/components/contract";
 
 import { useNetwork } from "wagmi";
 import { NETWORK_ID } from "@/config";

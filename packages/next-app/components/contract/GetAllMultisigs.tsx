@@ -39,7 +39,7 @@ export const GetAllMultisigs = () => {
   return (
     <div className="border p-2">
       <h1 className="text-red-700 text-3xl">Get All Multisig</h1>
-      <div>Total number of multisigs: {totalMultiSigs}</div>
+      <div>Total number of multisigs: {totalMultiSigs + 1}</div>
       <div>
         <button
           onClick={() => handleGetAllMultisig()}

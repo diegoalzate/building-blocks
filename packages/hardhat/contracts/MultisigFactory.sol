@@ -8,7 +8,7 @@ contract MultisigFactory {
         // foundation id
         uint256 _multisigIndex;
         // owner address
-        address _owner;
+        // address[] _owners;
         // contract address created
         address _contract;
     }
@@ -17,12 +17,12 @@ contract MultisigFactory {
     // Number of Goverences that have been created
     uint256 public numMultisigs;
 
-    function createMultisig(string memory societyName, string memory deposit)
+    function createMultisig(string memory _societyName, uint256 _deposit)
         public
     {
-        Multisig multisig = new Multisig(msg.sender, societyName, deposit);
+        Multisig multisig = new Multisig(_societyName, _deposit);
         allMultisig[numMultisigs] = (
-            MultisigStruct(numMultisigs, msg.sender, address(multisig))
+            MultisigStruct(numMultisigs, address(multisig))
         );
         numMultisigs++;
     }

@@ -5,9 +5,8 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
   const { deployer } = await getNamedAccounts();
 
   const args = [
-    "0x0000000000000000000000000000000000000000",
     "Test Society",
-    "10",
+    1,
   ];
   await deploy("Multisig", {
     // Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy

@@ -17,7 +17,7 @@ typechain
 cache
 artifacts
 /packages/hardhat/node_modules
-/packages/hardhat/deployments/\*
+/packages/hardhat/deployments/*
 
 # next.js
 

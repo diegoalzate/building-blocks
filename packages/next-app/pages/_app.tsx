@@ -1,6 +1,7 @@
-import "../styles/globals.css";
+import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import NextHead from "next/head";
+import { AppLayout } from "@/components/layout/AppLayout";
 
 // Imports
 import { Provider, chain, createClient, defaultChains } from "wagmi";
@@ -58,8 +59,9 @@ const App = ({ Component, pageProps }: AppProps) => {
       <NextHead>
         <title>create-web3</title>
       </NextHead>
-
-      <Component {...pageProps} />
+      <AppLayout>
+        <Component {...pageProps} />
+      </AppLayout>
     </Provider>
   );
 };

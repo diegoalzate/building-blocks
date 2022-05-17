@@ -41,28 +41,37 @@ export const CreateMultisig = () => {
 
   return (
     <div>
-      <h1 className="text-red-700 text-3xl">Create Multisig</h1>
+      <h1 className="text-bbGray-100 text-4xl font-bold text-center">
+        Create Society
+      </h1>
 
-      <div className="border p-2">
-        <input
-          className="border m-1 p-1 w-full"
-          placeholder="Society Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <input
-          className="border m-1 p-1 w-full"
-          placeholder="Deposit Amount"
-          value={deposit}
-          type="number"
-          onChange={(e) => setDeposit(Number(e.target.value))}
-        />
-        <button
-          onClick={() => handleCreateMultisig()}
-          className="border m-1 p-2"
-        >
-          New Multisig
-        </button>
+      <div className="py-12 px-24">
+        <div className="py-8">
+          <input
+            className="border-4 m-1 p-2 rounded-lg border-bbGray-100 w-full"
+            placeholder="Society Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
+        <div className="py-8">
+          <input
+            className="border-4 m-1 p-2 rounded-lg border-bbGray-100 w-full"
+            placeholder="Deposit Amount"
+            value={deposit}
+            type="number"
+            onChange={(e) => setDeposit(Number(e.target.value))}
+          />
+        </div>
+
+        <div className="flex justify-center py-8">
+          <button
+            onClick={() => handleCreateMultisig()}
+            className="border-4 border-bbGray-100 bg-bbBlue-200 rounded-md py-2 px-4 font-bold text-xl text-white"
+          >
+            Create
+          </button>
+        </div>
       </div>
     </div>
   );

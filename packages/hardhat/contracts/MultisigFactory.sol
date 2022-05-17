@@ -2,6 +2,7 @@
 pragma solidity ^0.8.10;
 
 import "./Multisig.sol";
+import "hardhat/console.sol";
 
 contract MultisigFactory {
     struct MultisigStruct {
@@ -24,6 +25,10 @@ contract MultisigFactory {
         allMultisig[numMultisigs] = (
             MultisigStruct(numMultisigs, address(multisig))
         );
+
+        // Logs address of new multisig instacne
+        console.log("New multisig deployed at", address(multisig));
+
         numMultisigs++;
     }
 

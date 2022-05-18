@@ -20,7 +20,7 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
         <meta name="description" content="Building Block" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <header className="flex justify-between h-28 py-4 pl-6 sticky top-0 bg-bbYellow-100">
+      <header className="flex justify-between h-28 py-4 pl-6 sticky top-0 bg-bbYellow-100 z-30">
         <Image alt="Building Block" src={bbLogo} width={220} />
         <div></div>
         <div className="py-4 px-6">

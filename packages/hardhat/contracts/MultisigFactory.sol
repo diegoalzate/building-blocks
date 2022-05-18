@@ -32,11 +32,11 @@ contract MultisigFactory {
         numMultisigs++;
     }
 
-    function getMultisigDetails(uint256 _tokenId)
+    function getMultisigDetails(uint256 _multisigIndex)
         public
         view
         returns (MultisigStruct memory)
     {
-        return allMultisig[_tokenId];
+        return allMultisig[_multisigIndex];
     }
 }

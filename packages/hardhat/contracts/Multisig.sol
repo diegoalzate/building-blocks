@@ -65,8 +65,8 @@ contract Multisig {
 
     // add new member as owner after receving deposit
     function newOwner() public payable {
-        require(msg.value > deposit);
-        require(msg.sender.balance > msg.value);
+        require(msg.value == deposit, "Value is not equal to deposit value.");
+        require(msg.sender.balance > msg.value, "Insufficient balance. Please add funds.");
         owners.push(msg.sender);
         isOwner[msg.sender] = true;
         console.log(address(this).balance);

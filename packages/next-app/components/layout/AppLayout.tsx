@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { useConnect } from "wagmi";
 
-import { Connect, Disconnect, SwitchNetwork } from "@/components/wallet";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 import Image from "next/image";
 import bbLogo from "@/images/bb-logo.png";
@@ -23,7 +23,9 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
       <header className="flex justify-between h-28 py-4 pl-6 sticky top-0 bg-bbYellow-100">
         <Image alt="Building Block" src={bbLogo} width={220} />
         <div></div>
-        <div>{!activeConnector ? <Connect /> : <Disconnect />}</div>
+        <div className="py-4 px-6">
+          <ConnectButton />
+        </div>
       </header>
       <main>{children}</main>
     </div>

@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.textBorder {
+  -webkit-text-stroke: 1.5px #004c3f;
+}

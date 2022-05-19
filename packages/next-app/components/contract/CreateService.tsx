@@ -8,7 +8,7 @@ import { NETWORK_ID } from "@/config";
 export const CreateService = () => {
   const router = useRouter();
   const { contract } = router.query;
-  const [serviceName, setServiceName] = useState("");
+  const [serviceDescription, setServiceDescription] = useState("");
   const [contractorAddress, setContractorAddress] = useState("");
   const [amount, setAmount] = useState(0);
   const chainId = Number(NETWORK_ID);
@@ -27,17 +27,20 @@ export const CreateService = () => {
 
   // console.log("multisigContract", multisigContract);
 
-  const handlePayNow = async () => {
-    console.log("handlePayNow");
-
-    // const tx = multisigContract.createMultisig();
-    //   console.log("tx", tx);
-    // try {
-    //   const receipt = await tx.wait();
-    //   console.log("receipt", receipt);
-    // } catch (e) {
-    //   console.log("error", e);
-    // }
+  const handleCreateService = async () => {
+    console.log("handleCreateService");
+    try {
+      const tx = multisigContract.submitTransactionProposal(
+        contractorAddress,
+        amount,
+        serviceDescription
+      );
+      console.log("tx", tx);
+      const receipt = await tx.wait();
+      console.log("receipt", receipt);
+    } catch (e) {
+      console.log("error", e);
+    }
   };
 
   return (
@@ -50,17 +53,17 @@ export const CreateService = () => {
         <div className="py-8">
           <input
             className="border-4 m-1 p-2 rounded-lg border-bbGray-100 w-full"
-            placeholder="Service Name"
-            value={serviceName}
-            onChange={(e) => setServiceName(e.target.value)}
+            placeholder="Contractor Address"
+            value={contractorAddress}
+            onChange={(e) => setContractorAddress(e.target.value)}
           />
         </div>
         <div className="py-8">
           <input
             className="border-4 m-1 p-2 rounded-lg border-bbGray-100 w-full"
-            placeholder="Contractor Address"
-            value={contractorAddress}
-            onChange={(e) => setContractorAddress(e.target.value)}
+            placeholder="Service Description"
+            value={serviceDescription}
+            onChange={(e) => setServiceDescription(e.target.value)}
           />
         </div>
 
@@ -76,10 +79,10 @@ export const CreateService = () => {
 
         <div className="flex justify-center py-8">
           <button
-            onClick={() => handlePayNow()}
+            onClick={() => handleCreateService()}
             className="border-4 border-bbGray-100 bg-bbBlue-200 rounded-md py-2 px-4 font-bold text-xl text-white"
           >
-            Pay Now
+            Create Service
           </button>
         </div>
       </div>

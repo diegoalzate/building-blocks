@@ -75,7 +75,7 @@ export const GetAllMultisigs = () => {
         {multisigInfo.map((multisig, index) => (
           <div key={index}>
             <button
-              className="cursor-pointer border-2 border-bbGray-100 my-2 py-2 rounded font-medium w-full"
+              className="cursor-pointer border-2 border-bbGray-100 my-2 py-2 rounded text-bbGray-100 font-medium w-full"
               onClick={() => router.push(`/multisig/${multisig._contract}`)}
             >
               {multisig._contract}

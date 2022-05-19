@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useConnect } from "wagmi";
+import { useRouter } from "next/router";
 
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
@@ -11,17 +11,23 @@ type AppLayoutProps = {
 };
 
 export const AppLayout = ({ children }: AppLayoutProps) => {
-  const { activeConnector } = useConnect();
+  const router = useRouter();
 
   return (
     <div className="bg-bbYellow-100">
       <Head>
-        <title>Building Block</title>
-        <meta name="description" content="Building Block" />
+        <title>Building Blocks</title>
+        <meta name="description" content="Building Blocks" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <header className="flex justify-between h-28 py-4 pl-6 sticky top-0 bg-bbYellow-100 z-30">
-        <Image alt="Building Block" src={bbLogo} width={220} />
+        <Image
+          className="cursor-pointer"
+          onClick={() => router.push(`/`)}
+          alt="Building Blocks"
+          src={bbLogo}
+          width={220}
+        />
         <div></div>
         <div className="py-4 px-6">
           <ConnectButton />

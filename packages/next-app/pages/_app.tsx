@@ -42,7 +42,7 @@ const { chains, provider } = configureChains(
 );
 
 const { connectors } = getDefaultWallets({
-  appName: "Building Block",
+  appName: "Building Blocks",
   chains,
 });
 
@@ -60,7 +60,7 @@ const App = ({ Component, pageProps }: AppProps) => {
     <WagmiProvider client={wagmiClient}>
       <RainbowKitProvider chains={chains}>
         <NextHead>
-          <title>Building Block</title>
+          <title>Building Blocks</title>
         </NextHead>
         <AppLayout>
           <Component {...pageProps} />

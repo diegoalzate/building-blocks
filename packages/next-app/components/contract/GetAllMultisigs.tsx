@@ -1,13 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import { useContract, useSigner } from "wagmi";
 
 import contracts from "@/contracts/hardhat_contracts.json";
 import { NETWORK_ID } from "@/config";
 
+interface multisigProps {
+  _contract: string;
+}
+
 export const GetAllMultisigs = () => {
+  const router = useRouter();
   const chainId = Number(NETWORK_ID);
   const [totalMultiSigs, setTotalMultiSigs] = useState(0);
-  const [multisigs, setMultisigs] = useState(0);
+  const [multisigInfo, setMultisigInfo] = useState<Array<multisigProps>>([]);
 
   const { data: signerData } = useSigner();
 
@@ -22,49 +28,60 @@ export const GetAllMultisigs = () => {
     contractInterface: multisigFactoryABI,
     signerOrProvider: signerData || undefined,
   });
-  //   console.log("multisigFactoryContract", multisigFactoryContract);
+  // console.log("multisigFactoryContract", multisigFactoryContract);
 
   const handleGetAllMultisig = async () => {
     const numMultisigs = await multisigFactoryContract.numMultisigs();
     setTotalMultiSigs(numMultisigs.toNumber());
   };
 
-  const handleGetMultisig = async (multisigIndex: number) => {
-    const getMultisigDetails = await multisigFactoryContract.getMultisigDetails(
-      multisigIndex
-    );
-    console.log("getMultisigDetails", getMultisigDetails);
+  const handleGetMultisigInfo = async () => {
+    const multisigInfo = [];
+    for (let i = 0; i < totalMultiSigs; i++) {
+      const getMultisigDetails =
+        await multisigFactoryContract.getMultisigDetails(i);
+      multisigInfo.push(getMultisigDetails);
+    }
+    setMultisigInfo(multisigInfo);
   };
+
+  const refresh = async () => {
+    await handleGetAllMultisig();
+    await handleGetMultisigInfo();
+  };
+
+  useEffect(() => {
+    if (multisigFactoryContract.signer) {
+      refresh();
+    }
+  }, [multisigFactoryContract, totalMultiSigs]);
 
   return (
     <div className="border p-2">
-      <h1 className="text-red-700 text-3xl">Get All Multisig</h1>
-      <div>Total number of multisigs: {totalMultiSigs + 1}</div>
-      <div>
+      <div className="flex justify-between">
+        <span></span>
+        <h1 className="text-bbGray-100 text-4xl font-bold text-center">
+          All Multisigs
+        </h1>
         <button
-          onClick={() => handleGetAllMultisig()}
-          className="border m-1 p-2"
+          className="py-1 px-2 border-2 border-bbGray-100 rounded text-sm font-medium"
+          onClick={() => refresh()}
         >
-          Get All Multisig
+          refresh
         </button>
       </div>
-      <div className="my-4">
-        <input
-          className="border m-1 p-1 w-full"
-          placeholder="Multisig Index"
-          type="number"
-          min={0}
-          max={totalMultiSigs}
-          value={multisigs}
-          onChange={(e) => setMultisigs(Number(e.target.value))}
-        />
-        <button
-          onClick={() => handleGetMultisig(multisigs)}
-          className="border m-1 p-2"
-        >
-          Get Multisig Info
-        </button>
-        <div className="text-sm px-2">multisig info in console log</div>
+
+      <div className="my-8">
+        {multisigInfo.map((multisig, index) => (
+          <div key={index}>
+            <button
+              className="cursor-pointer border-2 border-bbGray-100 my-2 py-2 rounded font-medium w-full"
+              onClick={() => router.push(`/multisig/${multisig._contract}`)}
+            >
+              {multisig._contract}
+            </button>
+          </div>
+        ))}
       </div>
     </div>
   );

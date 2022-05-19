@@ -4,7 +4,7 @@ require("dotenv").config({ path: "../../.env" });
 require("hardhat-deploy");
 require("@nomiclabs/hardhat-ethers");
 
-const defaultNetwork = "hardhat";
+const defaultNetwork = "localhost";
 
 /**
  * @type import('hardhat/config').HardhatUserConfig
@@ -14,7 +14,7 @@ module.exports = {
   defaultNetwork,
 
   networks: {
-    hardhat: {
+    localhost: {
       chainId: 31337,
     },
 

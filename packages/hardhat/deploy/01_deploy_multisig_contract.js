@@ -1,16 +1,12 @@
 // deploy/01_deploy_multisig_contract
 const { ethers } = require("hardhat");
-const { network } = require("hardhat/config")
+const { network } = require("hardhat/config");
 
 module.exports = async ({ getNamedAccounts, deployments }) => {
-
   const { deploy, log } = deployments;
   const { deployer } = await getNamedAccounts();
 
-  const args = [
-    "Test Society",
-    1,
-  ];
+  const args = ["Test Society", 1];
 
   // fetches the deployed MultisigFactory contract
   const MultisigFactory = await ethers.getContract("MultisigFactory");
@@ -26,6 +22,5 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
   //   from: deployer,
   //   log: true,
   // });
-
 };
 module.exports.tags = ["all", "multisig"];

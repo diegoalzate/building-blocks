@@ -23,7 +23,7 @@ export const Hero = () => {
   return (
     <div className="">
       <div className="sm:flex p-6">
-        <div className="sm:w-1/2">
+        <div className="sm:w-1/2 my-auto">
           <div className="text-5xl font-bold text-bbGray-100">
             Pay fees together & get decentralized INVOICE NFTs
           </div>
@@ -38,20 +38,39 @@ export const Hero = () => {
           </div>
         </div>
         <div className="sm:w-1/2 z-10">
-          <div className="h-32 w-32 " id="chest">
+          <div
+            className="h-32 w-32 "
+            id="chest"
+            style={{ position: "relative" }}
+          >
             <Image src={chest} layout="fill" />
           </div>
-          <div className="h-32 w-32 " id="chest2">
+          <div
+            className="h-32 w-32 "
+            id="chest2"
+            style={{ position: "relative" }}
+          >
             <Image src={chest2} layout="fill" />
           </div>
-
-          <div className="h-32 w-32" id="handshake">
+          <div
+            className="h-32 w-32"
+            id="handshake"
+            style={{ position: "relative" }}
+          >
             <Image src={handshake} layout="fill" />
           </div>
-          <div className="h-32 w-32" id="shield">
+          <div
+            className="h-32 w-32"
+            id="shield"
+            style={{ position: "relative" }}
+          >
             <Image src={shield} layout="fill" />
           </div>
-          <div className="h-32 w-32" id="chairImg">
+          <div
+            className="h-32 w-32"
+            id="chairImg"
+            style={{ position: "relative" }}
+          >
             <Image src={chairImg} layout="fill" />
           </div>
         </div>

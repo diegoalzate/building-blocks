@@ -4,7 +4,6 @@ pragma solidity ^0.8.10;
 import "hardhat/console.sol";
 
 contract Multisig {
-
     // array of addresses of owners
     address[] public owners;
     // maps addresses as owner
@@ -12,9 +11,9 @@ contract Multisig {
     // whitelist for new members to be added as owner
     address[] public newMembers;
     // number of confirmations required for invoking a transaction
-    uint public numConfirmationsRequired;
+    uint256 public numConfirmationsRequired;
     // society name
-    string societyName;
+    string public societyName;
     // intial deposit to join society and become an owner
     uint256 deposit;
 
@@ -48,10 +47,7 @@ contract Multisig {
     }
 
     // called whenever new instance is deployed first time
-    constructor(
-        string memory _societyName,
-        uint256 _deposit
-    ) {
+    constructor(string memory _societyName, uint256 _deposit) {
         newMembers.push(msg.sender);
         societyName = _societyName;
         // superowner to pay the deposit
@@ -66,26 +62,31 @@ contract Multisig {
     // add new member as owner after receving deposit
     function newOwner() public payable {
         require(msg.value == deposit, "Value is not equal to deposit value.");
-        require(msg.sender.balance > msg.value, "Insufficient balance. Please add funds.");
+        require(
+            msg.sender.balance > msg.value,
+            "Insufficient balance. Please add funds."
+        );
         owners.push(msg.sender);
         isOwner[msg.sender] = true;
         console.log(address(this).balance);
     }
 
     // function to request payment for service
-    function submitTransactionProposal(address _to, uint256 _amount, bytes memory _data)
-        public
-        onlyOwner {
-            uint txIndex = serviceTransactions.length + 1;
+    function submitTransactionProposal(
+        address _to,
+        uint256 _amount,
+        bytes memory _data
+    ) public onlyOwner {
+        uint256 txIndex = serviceTransactions.length + 1;
 
-        serviceTransactions.push(ServiceTransaction(
-            {
+        serviceTransactions.push(
+            ServiceTransaction({
                 to: _to,
                 amount: _amount,
                 data: _data,
                 executed: false,
                 numConfirmations: 0
-            }
-        ));
+            })
+        );
     }
 }

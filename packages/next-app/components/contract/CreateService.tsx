@@ -1,35 +1,36 @@
 import { useState } from "react";
+import { useRouter } from "next/router";
 import { useContract, useSigner } from "wagmi";
 
 import contracts from "@/contracts/hardhat_contracts.json";
 import { NETWORK_ID } from "@/config";
 
 export const CreateService = () => {
+  const router = useRouter();
+  const { contract } = router.query;
+  const [serviceName, setServiceName] = useState("");
+  const [contractorAddress, setContractorAddress] = useState("");
+  const [amount, setAmount] = useState(0);
   const chainId = Number(NETWORK_ID);
-  const [name, setName] = useState("");
-  const [deposit, setDeposit] = useState(0);
 
   const { data: signerData } = useSigner();
 
   const allContracts = contracts as any;
-  const multisigFactoryAddress =
-    allContracts[chainId][0].contracts.MultisigFactory.address;
-  const multisigFactoryABI =
-    allContracts[chainId][0].contracts.MultisigFactory.abi;
+  const multisigABI = allContracts[chainId][0].contracts.Multisig.abi;
 
-  const multisigFactoryContract = useContract({
-    addressOrName: multisigFactoryAddress,
-    contractInterface: multisigFactoryABI,
+  const multisigContract = useContract({
+    addressOrName:
+      (contract as string) || "0x0000000000000000000000000000000000000000",
+    contractInterface: multisigABI,
     signerOrProvider: signerData || undefined,
   });
 
-  //   console.log("multisigFactoryContract", multisigFactoryContract);
+  // console.log("multisigContract", multisigContract);
 
-  const handleCreateMultisig = async () => {
-    console.log("handleCreateMultisig");
-    console.log("name", name);
-    console.log("deposit", deposit);
-    const tx = multisigFactoryContract.createMultisig(name, deposit);
+  const handlePayNow = async () => {
+    console.log("handlePayNow");
+
+    // const tx = multisigContract.createMultisig();
     //   console.log("tx", tx);
     // try {
     //   const receipt = await tx.wait();
@@ -50,17 +51,16 @@ export const CreateService = () => {
           <input
             className="border-4 m-1 p-2 rounded-lg border-bbGray-100 w-full"
             placeholder="Service Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={serviceName}
+            onChange={(e) => setServiceName(e.target.value)}
           />
         </div>
         <div className="py-8">
           <input
             className="border-4 m-1 p-2 rounded-lg border-bbGray-100 w-full"
             placeholder="Contractor Address"
-            value={deposit}
-            type="number"
-            onChange={(e) => setDeposit(Number(e.target.value))}
+            value={contractorAddress}
+            onChange={(e) => setContractorAddress(e.target.value)}
           />
         </div>
 
@@ -68,16 +68,15 @@ export const CreateService = () => {
           <input
             className="border-4 m-1 p-2 rounded-lg border-bbGray-100 w-full"
             placeholder="Amount"
-            value={deposit}
+            value={amount}
             type="number"
-            onChange={(e) => setDeposit(Number(e.target.value))}
+            onChange={(e) => setAmount(Number(e.target.value))}
           />
         </div>
 
-
         <div className="flex justify-center py-8">
           <button
-            onClick={() => handleCreateMultisig()}
+            onClick={() => handlePayNow()}
             className="border-4 border-bbGray-100 bg-bbBlue-200 rounded-md py-2 px-4 font-bold text-xl text-white"
           >
             Pay Now

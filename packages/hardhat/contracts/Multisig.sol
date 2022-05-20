@@ -190,7 +190,7 @@ contract Multisig {
 
         serviceTransaction.executed = true;
 
-        (bool success, ) = serviceTransaction.to.call.value(serviceTransaction.amount)(serviceTransaction.data);
+        (bool success, ) = serviceTransaction.to.call{value: serviceTransaction.amount}(serviceTransaction.data);
         require(success, "Transaction failed");
 
         emit ExecuteTransaction(msg.sender, _txIndex);

@@ -26,9 +26,9 @@ export const CreateMultisig = () => {
   //   console.log("multisigFactoryContract", multisigFactoryContract);
 
   const handleCreateMultisig = async () => {
-    console.log("handleCreateMultisig");
-    console.log("name", name);
-    console.log("deposit", deposit);
+    // console.log("handleCreateMultisig");
+    // console.log("name", name);
+    // console.log("deposit", deposit);
     const tx = multisigFactoryContract.createMultisig(name, deposit);
     //   console.log("tx", tx);
     // try {
@@ -59,6 +59,7 @@ export const CreateMultisig = () => {
             className="border-4 m-1 p-2 rounded-lg border-bbGray-100 w-full"
             placeholder="Deposit Amount"
             value={deposit}
+            min={0}
             type="number"
             onChange={(e) => setDeposit(Number(e.target.value))}
           />

@@ -6,6 +6,7 @@ import "hardhat/console.sol";
 
 contract Multisig {
 
+
     event NewOwner(address indexed owner, uint depositAmount, uint contractBalance);
 
     event SubmitTransactionProposal(
@@ -31,6 +32,7 @@ contract Multisig {
     mapping(address => bool) public isNewMember;
     // number of Approvals required for invoking a transaction
     uint public numApprovalsRequired;
+
     // society name
     string public societyName;
     // intial deposit to join society and become an owner
@@ -84,11 +86,13 @@ contract Multisig {
     }
 
     // called whenever new instance is deployed first time
+
     constructor(
         string memory _societyName,
         uint256 _deposit
     ) {
         isNewMember[msg.sender] = true;
+
         societyName = _societyName;
         // superowner to pay the deposit
         deposit = _deposit;
@@ -107,10 +111,12 @@ contract Multisig {
         );
         // check if the value being sent is equal to the required deposit
         require(msg.value == deposit, "Value is not equal to deposit value.");
+
         // check if person has enough funds
         require(msg.sender.balance > msg.value, "Insufficient balance. Please add funds.");
         isNewMember[msg.sender] = false;
         // add member to the list of owners
+
         owners.push(msg.sender);
         // add new oner to the owner mapping
         isOwner[msg.sender] = true;
@@ -121,13 +127,15 @@ contract Multisig {
     }
 
     // function to request payment for service
+
     function submitTransactionProposal(address _to, uint256 _amount, bytes memory _data)
         public
         onlyOwner {
             uint txIndex = serviceTransactions.length;
 
-        serviceTransactions.push(ServiceTransaction(
-            {
+
+        serviceTransactions.push(
+            ServiceTransaction({
                 to: _to,
                 amount: _amount,
                 data: _data,
@@ -138,6 +146,7 @@ contract Multisig {
 
         // emit event when a request for transaction service is submitted
         emit SubmitTransactionProposal(msg.sender, txIndex, _to, _amount, _data);
+
     }
 
     // function for owners to approve transaction

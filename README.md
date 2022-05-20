@@ -1,4 +1,4 @@
-# Building Block
+# Building Blocks
 
 ## Quick Start Notes
 

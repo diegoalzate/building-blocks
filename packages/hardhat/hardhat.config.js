@@ -1,20 +1,20 @@
-require('@nomiclabs/hardhat-waffle');
-require('dotenv').config({ path: '../../.env' });
+require("@nomiclabs/hardhat-waffle");
+require("dotenv").config({ path: "../../.env" });
 
-require('hardhat-deploy');
-require('@nomiclabs/hardhat-ethers');
+require("hardhat-deploy");
+require("@nomiclabs/hardhat-ethers");
 
-const defaultNetwork = 'hardhat';
+const defaultNetwork = "localhost";
 
 /**
  * @type import('hardhat/config').HardhatUserConfig
  */
 module.exports = {
-  solidity: '0.8.10',
+  solidity: "0.8.10",
   defaultNetwork,
 
   networks: {
-    hardhat: {
+    localhost: {
       chainId: 31337,
     },
 
@@ -69,12 +69,12 @@ module.exports = {
 
     // L2 TEST NETWORKS
 
-    mumbai: {
-      chainId: 80001,
-      url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`,
-      // url: `https://polygon-mumbai.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_ID}`,
-      accounts: [`${process.env.MUMBAI_PRIVATE_KEY}`],
-    },
+    // mumbai: {
+    //   chainId: 80001,
+    //   url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`,
+    //   // url: `https://polygon-mumbai.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_ID}`,
+    //   accounts: [`${process.env.MUMBAI_PRIVATE_KEY}`],
+    // },
   },
   namedAccounts: {
     deployer: {

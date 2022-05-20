@@ -28,8 +28,8 @@ contract Multisig {
     // maps addresses as owner
     mapping(address => bool) public isOwner;
     // whitelist for new members to be added as owner. Do we need it? It will cost more gas so use a mapping?
-    // address[] public newMembers;
-    mapping(address => bool) public isNewMember;
+    address[] public newMembers;
+    // mapping(address => bool) public isNewMember;
     // number of Approvals required for invoking a transaction
     uint public numApprovalsRequired;
 
@@ -105,6 +105,7 @@ contract Multisig {
 
     // add new member as owner after receving deposit
     function newOwner() public payable {
+        console.log(msg.sender);
         require(
             isNewMember[msg.sender] == true,
             "You are not a new member. You cannot interact with this function."
@@ -165,7 +166,7 @@ contract Multisig {
         isApproved[_txIndex][msg.sender] = true;
         serviceTransaction.numApprovals ++;
 
-        emit ApproaveTransactionPropasal(msg.sender, _txIndex);
+        emit ApproveTransactionPropasal(msg.sender, _txIndex);
     }
 
     function revokeApproval(uint _txIndex)

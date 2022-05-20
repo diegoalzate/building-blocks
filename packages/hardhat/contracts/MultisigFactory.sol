@@ -20,10 +20,14 @@ contract MultisigFactory {
     // Number of Goverences that have been created
     uint256 public numMultisigs;
 
+    // function to create a new multisig instance for each society
     function createMultisig(string memory _societyName, uint256 _deposit)
         public
     {
+        // uses the Multisig.sol contract as ref for new multisig
         Multisig multisig = new Multisig(_societyName, _deposit);
+
+        // add new multisig to Multisig mapping
         allMultisig[numMultisigs] = (
             MultisigStruct(numMultisigs, address(multisig))
         );
@@ -33,7 +37,8 @@ contract MultisigFactory {
 
         numMultisigs++;
     }
-
+    
+    // function to fetch multisig details
     function getMultisigDetails(uint256 _multisigIndex)
         public
         view

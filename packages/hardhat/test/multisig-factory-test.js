@@ -42,4 +42,14 @@ describe ("MultisigFactory", function() {
 
         expect(multisigDetails[0].toNumber()).to.equal(0);
     });
+
+    it("user should be a member" , async () => {
+        const tx = await multisigFactory.createMultisig(
+            "Test Society",
+            ethers.utils.parseEther("1"));
+        
+        const txnReceipt = await tx.wait();
+        const multisig = ethers.getContractAt("Multisig", txnReceipt.contractAddress)
+        
+    })
 })

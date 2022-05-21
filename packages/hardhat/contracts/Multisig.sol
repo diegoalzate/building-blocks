@@ -6,23 +6,28 @@ import "hardhat/console.sol";
 import "./interfaces/IMultisig.sol";
 
 contract Multisig {
-
-
-    event NewOwner(address indexed owner, uint depositAmount, uint contractBalance);
+    event NewOwner(
+        address indexed owner,
+        uint256 depositAmount,
+        uint256 contractBalance
+    );
 
     event SubmitTransactionProposal(
         address indexed owner,
-        uint indexed txIndex,
+        uint256 indexed txIndex,
         address indexed to,
-        uint value,
+        uint256 value,
         bytes data
     );
 
-    event ApproveTransactionPropasal(address indexed owner, uint indexed txIndex);
+    event ApproveTransactionPropasal(
+        address indexed owner,
+        uint256 indexed txIndex
+    );
 
-    event RevokeApproval(address indexed owner, uint indexed txIndex);
+    event RevokeApproval(address indexed owner, uint256 indexed txIndex);
 
-    event ExecuteTransaction(address indexed owner, uint indexed txIndex);
+    event ExecuteTransaction(address indexed owner, uint256 indexed txIndex);
 
     // array of addresses of owners. Do we need it? It will cost more gas
     address[] public owners;
@@ -32,7 +37,7 @@ contract Multisig {
     // address[] public newMembers;
     mapping(address => bool) public isNewMember;
     // number of Approvals required for invoking a transaction
-    uint public numApprovalsRequired;
+    uint256 public numApprovalsRequired;
 
     // society name
     string public societyName;
@@ -69,19 +74,19 @@ contract Multisig {
     }
 
     // functions to check is txn proposal exists
-    modifier txExists(uint _txIndex) {
+    modifier txExists(uint256 _txIndex) {
         require(_txIndex < serviceTransactions.length, "tx does not exist");
         _;
     }
 
     // Check if proposal/ payment has already been executed
-    modifier notExecuted(uint _txIndex) {
+    modifier notExecuted(uint256 _txIndex) {
         require(!serviceTransactions[_txIndex].executed, "tx already executed");
         _;
     }
 
     // check if the owner has already submitted Approval
-    modifier notApproved(uint _txIndex) {
+    modifier notApproved(uint256 _txIndex) {
         require(!isApproved[_txIndex][msg.sender], "tx is already approved");
         _;
     }
@@ -93,8 +98,6 @@ contract Multisig {
         uint256 _deposit,
         address _owner
     ) {
-        owners.push(_owner);
-        isOwner[_owner] = true;
         isNewMember[_owner] = true;
         societyName = _societyName;
         // superowner to pay the deposit
@@ -105,12 +108,12 @@ contract Multisig {
     function addNewMember(address _newMember) external onlyOwner {
         isNewMember[_newMember] = true;
     }
-    
+
     // Function to receive Ether. msg.data must be empty
     receive() external payable {
         newOwner();
     }
-    
+
     // add new member as owner after receving deposit
     function newOwner() public payable {
         console.log(msg.sender);
@@ -123,7 +126,10 @@ contract Multisig {
         require(msg.value == deposit, "Value is not equal to deposit value.");
 
         // check if person has enough funds
-        require(msg.sender.balance > msg.value, "Insufficient balance. Please add funds.");
+        require(
+            msg.sender.balance > msg.value,
+            "Insufficient balance. Please add funds."
+        );
         isNewMember[msg.sender] = false;
         // add member to the list of owners
 
@@ -138,11 +144,12 @@ contract Multisig {
 
     // function to request payment for service
 
-    function submitTransactionProposal(address _to, uint256 _amount, bytes memory _data)
-        public
-        onlyOwner {
-            uint txIndex = serviceTransactions.length;
-
+    function submitTransactionProposal(
+        address _to,
+        uint256 _amount,
+        bytes memory _data
+    ) public onlyOwner {
+        uint256 txIndex = serviceTransactions.length;
 
         serviceTransactions.push(
             ServiceTransaction({
@@ -151,18 +158,23 @@ contract Multisig {
                 data: _data,
                 executed: false,
                 numApprovals: 0
-            }
-        ));
+            })
+        );
 
         // emit event when a request for transaction service is submitted
-        emit SubmitTransactionProposal(msg.sender, txIndex, _to, _amount, _data);
-
+        emit SubmitTransactionProposal(
+            msg.sender,
+            txIndex,
+            _to,
+            _amount,
+            _data
+        );
     }
 
     // function for owners to approve transaction
     // check if service transaction request exists, if payment for same has been made
     // and if owner has already approved
-    function approveTransactionProposal(uint _txIndex)
+    function approveTransactionProposal(uint256 _txIndex)
         public
         onlyOwner
         txExists(_txIndex)
@@ -170,37 +182,43 @@ contract Multisig {
         notApproved(_txIndex)
     {
         // calls txn details from array
-        ServiceTransaction storage serviceTransaction = serviceTransactions[_txIndex];
+        ServiceTransaction storage serviceTransaction = serviceTransactions[
+            _txIndex
+        ];
 
         isApproved[_txIndex][msg.sender] = true;
-        serviceTransaction.numApprovals ++;
+        serviceTransaction.numApprovals++;
 
         emit ApproveTransactionPropasal(msg.sender, _txIndex);
     }
 
-    function revokeApproval(uint _txIndex)
+    function revokeApproval(uint256 _txIndex)
         public
         onlyOwner
         txExists(_txIndex)
         notExecuted(_txIndex)
     {
-        ServiceTransaction storage serviceTransaction = serviceTransactions[_txIndex];
+        ServiceTransaction storage serviceTransaction = serviceTransactions[
+            _txIndex
+        ];
 
         require(isApproved[_txIndex][msg.sender], "tx not confirmed");
 
         isApproved[_txIndex][msg.sender] = false;
-        serviceTransaction.numApprovals --;
+        serviceTransaction.numApprovals--;
 
         emit RevokeApproval(msg.sender, _txIndex);
     }
 
-    function executeTransaction(uint _txIndex)
+    function executeTransaction(uint256 _txIndex)
         public
         onlyOwner
         txExists(_txIndex)
         notExecuted(_txIndex)
     {
-        ServiceTransaction storage serviceTransaction = serviceTransactions[_txIndex];
+        ServiceTransaction storage serviceTransaction = serviceTransactions[
+            _txIndex
+        ];
 
         require(
             serviceTransaction.numApprovals >= numApprovalsRequired,
@@ -209,15 +227,16 @@ contract Multisig {
 
         serviceTransaction.executed = true;
 
-        (bool success, ) = payable(serviceTransaction.to).call{value: serviceTransaction.amount}(serviceTransaction.data);
+        (bool success, ) = payable(serviceTransaction.to).call{
+            value: serviceTransaction.amount
+        }(serviceTransaction.data);
         require(success, "Transaction failed");
 
         emit ExecuteTransaction(msg.sender, _txIndex);
     }
 
     // function to get owners
-    function getOwners() public view returns(address[] memory){
+    function getOwners() public view returns (address[] memory) {
         return owners;
     }
-
 }

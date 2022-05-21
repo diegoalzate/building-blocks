@@ -1,11 +1,11 @@
 {
-  "31337": [
+  "80001": [
     {
-      "name": "localhost",
-      "chainId": "31337",
+      "name": "mumbai",
+      "chainId": "80001",
       "contracts": {
         "MultisigFactory": {
-          "address": "0x9A9f2CCfdE556A7E9Ff0848998Aa4a0CFD8863AE",
+          "address": "0xfC24582299f5bCc1E54d274B04bAF0ED9050D9D5",
           "abi": [
             {
               "anonymous": false,
@@ -103,6 +103,11 @@
                   "internalType": "uint256",
                   "name": "_deposit",
                   "type": "uint256"
+                },
+                {
+                  "internalType": "address",
+                  "name": "_priceFeed",
+                  "type": "address"
                 }
               ],
               "name": "createMultisig",
@@ -195,7 +200,7 @@
           ]
         },
         "Multisig": {
-          "address": "0x68B1D87F95878fE05B998F19b66F4baba5De1aed",
+          "address": "0xD5D062f6b427BA07deFcBf53061c3ad50E65263e",
           "abi": [
             {
               "inputs": [
@@ -212,6 +217,11 @@
                 {
                   "internalType": "address",
                   "name": "_owner",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "_priceFeed",
                   "type": "address"
                 }
               ],
@@ -490,6 +500,19 @@
               "name": "revokeApproval",
               "outputs": [],
               "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "s_priceFeed",
+              "outputs": [
+                {
+                  "internalType": "contract AggregatorV3Interface",
+                  "name": "",
+                  "type": "address"
+                }
+              ],
+              "stateMutability": "view",
               "type": "function"
             },
             {

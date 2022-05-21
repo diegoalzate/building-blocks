@@ -21,11 +21,11 @@ contract MultisigFactory {
     uint256 public numMultisigs;
 
     // function to create a new multisig instance for each society
-    function createMultisig(string memory _societyName, uint256 _deposit)
+    function createMultisig(string memory _societyName, uint256 _deposit, address _priceFeed)
         public
     {
         // uses the Multisig.sol contract as ref for new multisig
-        Multisig multisig = new Multisig(_societyName, _deposit, msg.sender);
+        Multisig multisig = new Multisig(_societyName, _deposit, msg.sender, _priceFeed);
 
         // add new multisig to Multisig mapping
         allMultisig[numMultisigs] = (

@@ -4,9 +4,10 @@ pragma solidity ^0.8.10;
 // ability to console log within smart contracts
 import "hardhat/console.sol";
 import "./interfaces/IMultisig.sol";
-import "./PriceConsumerV3.sol";
+import "./PriceConverter.sol";
 
 contract Multisig {
+    using PriceConverter for uint256; 
     event NewOwner(
         address indexed owner,
         uint256 depositAmount,
@@ -45,6 +46,9 @@ contract Multisig {
     // intial deposit to join society and become an owner
     uint256 public deposit;
 
+    // chainlink pricefeed
+    AggregatorV3Interface public s_priceFeed;
+    
     // struct for intiating a transaction to pay for a service
     struct ServiceTransaction {
         // address to be paid
@@ -97,12 +101,15 @@ contract Multisig {
     constructor(
         string memory _societyName,
         uint256 _deposit,
-        address _owner
+        address _owner,
+        address _priceFeed
     ) {
         isNewMember[_owner] = true;
         societyName = _societyName;
+        s_priceFeed = AggregatorV3Interface(_priceFeed);
         // superowner to pay the deposit
-        deposit = _deposit;
+        deposit = _deposit.getConversionRate(s_priceFeed);
+        console.log(deposit.getConversionRate(s_priceFeed));
     }
 
     // function to add new member to whitelist
@@ -124,7 +131,8 @@ contract Multisig {
             "You are not a new member. You cannot interact with this function."
         );
         // check if the value being sent is equal to the required deposit
-        require(msg.value == deposit, "Value is not equal to deposit value.");
+        console.log(msg.value.getConversionRate(s_priceFeed));
+        require(msg.value.getConversionRate(s_priceFeed) == deposit, "Value is not equal to deposit value.");
 
         // check if person has enough funds
         require(

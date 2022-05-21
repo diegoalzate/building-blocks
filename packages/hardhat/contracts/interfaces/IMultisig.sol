@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.10;
+
 interface IMultisig {
     // array of addresses of owners
     function owners() external view returns (address[] memory);

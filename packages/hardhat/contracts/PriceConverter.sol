@@ -23,7 +23,7 @@ library PriceConverter {
     returns (uint256)
   {
     uint256 cryptoPrice = getPrice(priceFeed);
-    uint256 usdInCryptoAmount = (cryptoPrice / cryptoAmount) * 1000000000000000000;
+    uint256 usdInCryptoAmount = (cryptoPrice * cryptoAmount) / 1000000000000000000;
     // the actual ETH/USD conversation rate, after adjusting the extra 0s.
     return usdInCryptoAmount;
   }

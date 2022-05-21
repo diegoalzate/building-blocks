@@ -5,8 +5,21 @@
       "chainId": "31337",
       "contracts": {
         "MultisigFactory": {
-          "address": "0x0B306BF915C4d645ff596e518fAf3F9669b97016",
+          "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
           "abi": [
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": false,
+                  "internalType": "address[]",
+                  "name": "multisigs",
+                  "type": "address[]"
+                }
+              ],
+              "name": "gotMultisigs",
+              "type": "event"
+            },
             {
               "inputs": [
                 {
@@ -34,6 +47,54 @@
             {
               "inputs": [
                 {
+                  "internalType": "address",
+                  "name": "_multisigAddress",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "_memberAddress",
+                  "type": "address"
+                }
+              ],
+              "name": "checkIfUserIsMember",
+              "outputs": [
+                {
+                  "internalType": "bool",
+                  "name": "",
+                  "type": "bool"
+                }
+              ],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "_multisigAddress",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "_memberAddress",
+                  "type": "address"
+                }
+              ],
+              "name": "checkIfUserIsOwner",
+              "outputs": [
+                {
+                  "internalType": "bool",
+                  "name": "",
+                  "type": "bool"
+                }
+              ],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
                   "internalType": "string",
                   "name": "_societyName",
                   "type": "string"
@@ -46,6 +107,44 @@
               ],
               "name": "createMultisig",
               "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "_address",
+                  "type": "address"
+                }
+              ],
+              "name": "getAllMultigsUserWhereUserIsOwner",
+              "outputs": [
+                {
+                  "internalType": "address[]",
+                  "name": "",
+                  "type": "address[]"
+                }
+              ],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "_address",
+                  "type": "address"
+                }
+              ],
+              "name": "getAllMultisigsWhereUserIsOwner",
+              "outputs": [
+                {
+                  "internalType": "address[]",
+                  "name": "",
+                  "type": "address[]"
+                }
+              ],
               "stateMutability": "nonpayable",
               "type": "function"
             },
@@ -96,7 +195,7 @@
           ]
         },
         "Multisig": {
-          "address": "0x959922bE3CAee4b8Cd9a407cc3ac1C251C2007B1",
+          "address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
           "abi": [
             {
               "inputs": [
@@ -109,10 +208,134 @@
                   "internalType": "uint256",
                   "name": "_deposit",
                   "type": "uint256"
+                },
+                {
+                  "internalType": "address",
+                  "name": "_owner",
+                  "type": "address"
                 }
               ],
               "stateMutability": "nonpayable",
               "type": "constructor"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": true,
+                  "internalType": "address",
+                  "name": "owner",
+                  "type": "address"
+                },
+                {
+                  "indexed": true,
+                  "internalType": "uint256",
+                  "name": "txIndex",
+                  "type": "uint256"
+                }
+              ],
+              "name": "ApproveTransactionPropasal",
+              "type": "event"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": true,
+                  "internalType": "address",
+                  "name": "owner",
+                  "type": "address"
+                },
+                {
+                  "indexed": true,
+                  "internalType": "uint256",
+                  "name": "txIndex",
+                  "type": "uint256"
+                }
+              ],
+              "name": "ExecuteTransaction",
+              "type": "event"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": true,
+                  "internalType": "address",
+                  "name": "owner",
+                  "type": "address"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "depositAmount",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "contractBalance",
+                  "type": "uint256"
+                }
+              ],
+              "name": "NewOwner",
+              "type": "event"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": true,
+                  "internalType": "address",
+                  "name": "owner",
+                  "type": "address"
+                },
+                {
+                  "indexed": true,
+                  "internalType": "uint256",
+                  "name": "txIndex",
+                  "type": "uint256"
+                }
+              ],
+              "name": "RevokeApproval",
+              "type": "event"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": true,
+                  "internalType": "address",
+                  "name": "owner",
+                  "type": "address"
+                },
+                {
+                  "indexed": true,
+                  "internalType": "uint256",
+                  "name": "txIndex",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": true,
+                  "internalType": "address",
+                  "name": "to",
+                  "type": "address"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "value",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "bytes",
+                  "name": "data",
+                  "type": "bytes"
+                }
+              ],
+              "name": "SubmitTransactionProposal",
+              "type": "event"
             },
             {
               "inputs": [
@@ -125,6 +348,77 @@
               "name": "addNewMember",
               "outputs": [],
               "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "_txIndex",
+                  "type": "uint256"
+                }
+              ],
+              "name": "approveTransactionProposal",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "deposit",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "_txIndex",
+                  "type": "uint256"
+                }
+              ],
+              "name": "executeTransaction",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "getOwners",
+              "outputs": [
+                {
+                  "internalType": "address[]",
+                  "name": "",
+                  "type": "address[]"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "",
+                  "type": "address"
+                }
+              ],
+              "name": "isNewMember",
+              "outputs": [
+                {
+                  "internalType": "bool",
+                  "name": "",
+                  "type": "bool"
+                }
+              ],
+              "stateMutability": "view",
               "type": "function"
             },
             {
@@ -147,25 +441,6 @@
               "type": "function"
             },
             {
-              "inputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "",
-                  "type": "uint256"
-                }
-              ],
-              "name": "newMembers",
-              "outputs": [
-                {
-                  "internalType": "address",
-                  "name": "",
-                  "type": "address"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function"
-            },
-            {
               "inputs": [],
               "name": "newOwner",
               "outputs": [],
@@ -174,7 +449,7 @@
             },
             {
               "inputs": [],
-              "name": "numConfirmationsRequired",
+              "name": "numApprovalsRequired",
               "outputs": [
                 {
                   "internalType": "uint256",
@@ -202,6 +477,19 @@
                 }
               ],
               "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "_txIndex",
+                  "type": "uint256"
+                }
+              ],
+              "name": "revokeApproval",
+              "outputs": [],
+              "stateMutability": "nonpayable",
               "type": "function"
             },
             {
@@ -236,7 +524,7 @@
                 },
                 {
                   "internalType": "uint256",
-                  "name": "numConfirmations",
+                  "name": "numApprovals",
                   "type": "uint256"
                 }
               ],
@@ -278,6 +566,10 @@
               "outputs": [],
               "stateMutability": "nonpayable",
               "type": "function"
+            },
+            {
+              "stateMutability": "payable",
+              "type": "receive"
             }
           ]
         }

@@ -6,7 +6,11 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
   const { deploy, log } = deployments;
   const { deployer } = await getNamedAccounts();
 
-  const args = ["Test Society", 1];
+  const args = [
+    "Test Society",
+    1,
+    "0x0000000000000000000000000000000000000000",
+  ];
 
   // fetches the deployed MultisigFactory contract
   // const MultisigFactory = await ethers.getContract("MultisigFactory");

@@ -13,6 +13,7 @@ import {
   configureChains,
   getDefaultWallets,
   RainbowKitProvider,
+  Chain,
 } from "@rainbow-me/rainbowkit";
 
 import { useIsMounted } from "@/hooks";
@@ -32,7 +33,6 @@ const hardhatChain: Chain = {
   rpcUrls: {
     default: "http://127.0.0.1:8545",
   },
-  blockExplorers: {},
   testnet: true,
 };
 
@@ -58,7 +58,7 @@ const App = ({ Component, pageProps }: AppProps) => {
   if (!isMounted) return null;
   return (
     <WagmiProvider client={wagmiClient}>
-      <RainbowKitProvider chains={chains}>
+      <RainbowKitProvider coolMode chains={chains}>
         <NextHead>
           <title>Building Blocks</title>
         </NextHead>

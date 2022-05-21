@@ -1,10 +1,10 @@
 import type { NextPage } from "next";
-import { PayService } from "@/components/contract";
+import { ServiceApproval } from "@/components/contract";
 
 const PayServicePage: NextPage = () => {
   return (
     <div className={"h-screen"}>
-      <PayService />
+      <ServiceApproval />
     </div>
   );
 };

@@ -16,6 +16,7 @@ export const GetMultiSig = () => {
   const [societyName, setSocietyName] = useState("");
   const [societyDeposit, setSocietyDeposit] = useState<any>();
   const [addOwner, setAddOwner] = useState("");
+  const [serviceData, setServiceData] = useState<any>();
 
   const allContracts = contracts as any;
   const multisigABI = allContracts[chainId][0].contracts.Multisig.abi;
@@ -49,6 +50,10 @@ export const GetMultiSig = () => {
 
     const serviceContract = await multisigContract.serviceTransactions(0);
     console.log("serviceContract", serviceContract);
+    setServiceData(serviceContract);
+
+    const numApprovalsRequired = await multisigContract.numApprovalsRequired();
+    console.log("numApprovalsRequired", numApprovalsRequired);
   };
 
   useEffect(() => {
@@ -87,6 +92,16 @@ export const GetMultiSig = () => {
 
   const handleExcutePayment = async () => {
     console.log("handleExcutePayment");
+    // executeTransaction;
+
+    try {
+      const tx = await multisigContract.executeTransaction(0);
+      tx.wait(1).then(() => {
+        fetchData();
+      });
+    } catch (e) {
+      console.log("error", e);
+    }
   };
 
   return (
@@ -132,27 +147,36 @@ export const GetMultiSig = () => {
           )}
           {isOwner && (
             <>
-              <button
-                onClick={() =>
-                  router.push(`/create-service?contract=${address}`)
-                }
-                className="border-4 border-bbGray-100 bg-bbYellow-300 rounded-md py-2 px-4 font-bold text-xl"
-              >
-                Create Service
-              </button>
-              <button
-                onClick={() => router.push(`/pay-service?contract=${address}`)}
-                className="border-4 border-bbGray-100 bg-bbBlue-200 rounded-md py-2 px-4 font-bold text-xl text-white"
-              >
-                Agree For Service
-              </button>
+              {!serviceData && (
+                <button
+                  onClick={() =>
+                    router.push(`/create-service?contract=${address}`)
+                  }
+                  className="border-4 border-bbGray-100 bg-bbYellow-300 rounded-md py-2 px-4 font-bold text-xl"
+                >
+                  Create Service
+                </button>
+              )}
 
-              <button
-                onClick={() => handleExcutePayment()}
-                className="border-4 border-bbGray-100 bg-bbBlue-200 rounded-md py-2 px-4 font-bold text-xl text-white"
-              >
-                Excute Payment
-              </button>
+              {serviceData && serviceData.numApprovals.toString() === "0" && (
+                <button
+                  onClick={() =>
+                    router.push(`/pay-service?contract=${address}`)
+                  }
+                  className="border-4 border-bbGray-100 bg-bbBlue-200 rounded-md py-2 px-4 font-bold text-xl text-white"
+                >
+                  Agree For Service
+                </button>
+              )}
+
+              {serviceData && serviceData.numApprovals.toString() > 0 && (
+                <button
+                  onClick={() => handleExcutePayment()}
+                  className="border-4 border-bbGray-100 bg-bbBlue-200 rounded-md py-2 px-4 font-bold text-xl text-white"
+                >
+                  Excute Payment
+                </button>
+              )}
             </>
           )}
         </div>

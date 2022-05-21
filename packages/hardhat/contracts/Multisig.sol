@@ -240,4 +240,8 @@ contract Multisig {
     function getOwners() public view returns (address[] memory) {
         return owners;
     }
+
+    function getMultisigBalance() public view returns (uint) {
+        return address(this).balance;
+    }
 }

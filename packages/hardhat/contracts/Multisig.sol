@@ -4,6 +4,7 @@ pragma solidity ^0.8.10;
 // ability to console log within smart contracts
 import "hardhat/console.sol";
 import "./interfaces/IMultisig.sol";
+import "./PriceConsumerV3.sol";
 
 contract Multisig {
     event NewOwner(

@@ -25,7 +25,7 @@ export const CreateService = () => {
     signerOrProvider: signerData || undefined,
   });
 
-  // console.log("multisigContract", multisigContract);
+  console.log("multisigContract", multisigContract);
 
   const handleCreateService = async () => {
     console.log("handleCreateService");
@@ -51,6 +51,9 @@ export const CreateService = () => {
 
       <div className="py-12 px-24">
         <div className="py-8">
+          <label className="pl-4 text-bbGray-100 font-medium">
+            Contractor Address
+          </label>
           <input
             className="border-4 m-1 p-2 rounded-lg border-bbGray-100 w-full"
             placeholder="Contractor Address"
@@ -59,6 +62,9 @@ export const CreateService = () => {
           />
         </div>
         <div className="py-8">
+          <label className="pl-4 text-bbGray-100 font-medium">
+            Service Description
+          </label>
           <input
             className="border-4 m-1 p-2 rounded-lg border-bbGray-100 w-full"
             placeholder="Service Description"
@@ -68,6 +74,7 @@ export const CreateService = () => {
         </div>
 
         <div className="py-8">
+          <label className="pl-4 text-bbGray-100 font-medium">Amount</label>
           <input
             className="border-4 m-1 p-2 rounded-lg border-bbGray-100 w-full"
             placeholder="Amount"

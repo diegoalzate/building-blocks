@@ -17,7 +17,7 @@ contract Multisig {
         uint256 indexed txIndex,
         address indexed to,
         uint256 value,
-        bytes data
+        string data
     );
 
     event ApproveTransactionPropasal(
@@ -51,7 +51,7 @@ contract Multisig {
         // amount to be paid
         uint256 amount;
         // description of transaction
-        bytes data;
+        string data;
         // is transaction executed
         bool executed;
         // number of Approvals received for said transaction
@@ -147,7 +147,7 @@ contract Multisig {
     function submitTransactionProposal(
         address _to,
         uint256 _amount,
-        bytes memory _data
+        string memory _data
     ) public onlyOwner {
         uint256 txIndex = serviceTransactions.length;
 
@@ -229,7 +229,7 @@ contract Multisig {
 
         (bool success, ) = payable(serviceTransaction.to).call{
             value: serviceTransaction.amount
-        }(serviceTransaction.data);
+        }(abi.encode(serviceTransaction.data));
         require(success, "Transaction failed");
 
         emit ExecuteTransaction(msg.sender, _txIndex);

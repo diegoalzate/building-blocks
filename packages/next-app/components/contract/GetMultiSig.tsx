@@ -14,7 +14,7 @@ export const GetMultiSig = () => {
   const [isOwner, setIsOwner] = useState(false);
   const [isMember, setIsMember] = useState(false);
   const [societyName, setSocietyName] = useState("");
-  const [societyDeposit, setSocietyDeposit] = useState("");
+  const [societyDeposit, setSocietyDeposit] = useState<any>();
   const [addOwner, setAddOwner] = useState("");
 
   const allContracts = contracts as any;
@@ -26,28 +26,35 @@ export const GetMultiSig = () => {
     contractInterface: multisigABI,
     signerOrProvider: signerData || undefined,
   });
-  console.log("multisigContract", multisigContract);
+  // console.log("multisigContract", multisigContract);
+
+  const fetchData = async () => {
+    console.log("fetchData");
+    const name = await multisigContract.societyName();
+    setSocietyName(name);
+
+    const owner = await multisigContract.isOwner(accountData?.address);
+    console.log("isOwner", owner);
+    setIsOwner(owner);
+
+    const deposit = await multisigContract.deposit();
+    // console.log("deposit", deposit);
+    setSocietyDeposit(deposit);
+
+    const isNewMember = await multisigContract.isNewMember(
+      accountData?.address
+    );
+    console.log("isNewMember", isNewMember);
+    setIsMember(isNewMember);
+
+    const serviceContract = await multisigContract.serviceTransactions(0);
+    console.log("serviceContract", serviceContract);
+  };
 
   useEffect(() => {
     const getSocietyName = async () => {
       if (multisigContract.signer) {
-        const name = await multisigContract.societyName();
-        setSocietyName(name);
-        console.log("accountData", accountData?.address);
-
-        const owner = await multisigContract.isOwner(accountData?.address);
-        console.log("isOwner", owner);
-        setIsOwner(owner);
-
-        const deposit = await multisigContract.deposit();
-        console.log("deposit", deposit.toString());
-        setSocietyDeposit(deposit.toString());
-
-        const isNewMember = await multisigContract.isNewMember(
-          accountData?.address
-        );
-        console.log("isNewMember", isNewMember);
-        setIsMember(isNewMember);
+        fetchData();
       }
     };
     getSocietyName();
@@ -56,13 +63,30 @@ export const GetMultiSig = () => {
   const handleAddMember = async () => {
     try {
       const tx = await multisigContract.addNewMember(addOwner);
-      tx.wait(1).then((res: any) => {
-        console.log(res);
+      tx.wait(1).then(() => {
+        fetchData();
         setAddOwner("");
       });
     } catch (e) {
       console.log("error", e);
     }
+  };
+
+  const handleDeposit = async () => {
+    try {
+      const tx = await multisigContract.newOwner({
+        value: societyDeposit,
+      });
+      tx.wait(1).then(() => {
+        fetchData();
+      });
+    } catch (e) {
+      console.log("error", e);
+    }
+  };
+
+  const handleExcutePayment = async () => {
+    console.log("handleExcutePayment");
   };
 
   return (
@@ -98,28 +122,39 @@ export const GetMultiSig = () => {
         )}
 
         <div className="flex flex-col space-y-4">
-          <button className="border-4 border-bbGray-100 bg-bbYellow-300 rounded-md py-2 px-4 font-bold text-xl">
-            Deposit {societyDeposit}
-          </button>
-          <button
-            onClick={() => router.push(`/create-service?contract=${address}`)}
-            className="border-4 border-bbGray-100 bg-bbYellow-300 rounded-md py-2 px-4 font-bold text-xl"
-          >
-            Create Service
-          </button>
-          <button
-            onClick={() => router.push(`/pay-service?contract=${address}`)}
-            className="border-4 border-bbGray-100 bg-bbBlue-200 rounded-md py-2 px-4 font-bold text-xl text-white"
-          >
-            Agree For Service
-          </button>
+          {isMember && societyDeposit && (
+            <button
+              onClick={() => handleDeposit()}
+              className="border-4 border-bbGray-100 bg-bbYellow-300 rounded-md py-2 px-4 font-bold text-xl"
+            >
+              Deposit {societyDeposit.toString()}
+            </button>
+          )}
+          {isOwner && (
+            <>
+              <button
+                onClick={() =>
+                  router.push(`/create-service?contract=${address}`)
+                }
+                className="border-4 border-bbGray-100 bg-bbYellow-300 rounded-md py-2 px-4 font-bold text-xl"
+              >
+                Create Service
+              </button>
+              <button
+                onClick={() => router.push(`/pay-service?contract=${address}`)}
+                className="border-4 border-bbGray-100 bg-bbBlue-200 rounded-md py-2 px-4 font-bold text-xl text-white"
+              >
+                Agree For Service
+              </button>
 
-          <button
-            // onClick={() => router.push(`/pay-service?contract=${address}`)}
-            className="border-4 border-bbGray-100 bg-bbBlue-200 rounded-md py-2 px-4 font-bold text-xl text-white"
-          >
-            Excute Payment
-          </button>
+              <button
+                onClick={() => handleExcutePayment()}
+                className="border-4 border-bbGray-100 bg-bbBlue-200 rounded-md py-2 px-4 font-bold text-xl text-white"
+              >
+                Excute Payment
+              </button>
+            </>
+          )}
         </div>
       </div>
     </main>

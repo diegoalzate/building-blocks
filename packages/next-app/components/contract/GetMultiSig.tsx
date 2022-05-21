@@ -48,12 +48,16 @@ export const GetMultiSig = () => {
     console.log("isNewMember", isNewMember);
     setIsMember(isNewMember);
 
-    const serviceContract = await multisigContract.serviceTransactions(0);
-    console.log("serviceContract", serviceContract);
-    setServiceData(serviceContract);
+    try {
+      const serviceContract = await multisigContract.serviceTransactions(0);
+      // console.log("serviceContract", serviceContract);
+      if (serviceContract) setServiceData(serviceContract);
+    } catch (error) {
+      // console.log("error", error);
+    }
 
-    const numApprovalsRequired = await multisigContract.numApprovalsRequired();
-    console.log("numApprovalsRequired", numApprovalsRequired);
+    // const numApprovalsRequired = await multisigContract.numApprovalsRequired();
+    // console.log("numApprovalsRequired", numApprovalsRequired);
   };
 
   useEffect(() => {
@@ -158,7 +162,7 @@ export const GetMultiSig = () => {
                 </button>
               )}
 
-              {serviceData && serviceData.numApprovals.toString() === "0" && (
+              {serviceData && (
                 <button
                   onClick={() =>
                     router.push(`/pay-service?contract=${address}`)

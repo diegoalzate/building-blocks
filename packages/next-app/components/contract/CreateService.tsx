@@ -25,7 +25,7 @@ export const CreateService = () => {
     signerOrProvider: signerData || undefined,
   });
 
-  console.log("multisigContract", multisigContract);
+  // console.log("multisigContract", multisigContract);
 
   const handleCreateService = async () => {
     console.log("handleCreateService");
@@ -36,8 +36,9 @@ export const CreateService = () => {
         serviceDescription
       );
       console.log("tx", tx);
-      const receipt = await tx.wait();
-      console.log("receipt", receipt);
+      tx.wait(1).then((res: any) => {
+        console.log(res);
+      });
     } catch (e) {
       console.log("error", e);
     }

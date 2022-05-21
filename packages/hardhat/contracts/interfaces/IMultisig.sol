@@ -4,7 +4,7 @@ interface IMultisig {
     // maps addresses as owner
     function isOwner(address) external view returns (bool);
     // whitelist for new members to be added as owner
-    function isMember(address) external view returns (bool); 
+    function isNewMember(address) external view returns (bool); 
     // number of confirmations required for invoking a transaction
     function numConfirmationsRequired() external view returns (uint);
     // society name

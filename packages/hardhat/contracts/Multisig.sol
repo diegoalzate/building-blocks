@@ -3,6 +3,7 @@ pragma solidity ^0.8.10;
 
 // ability to console log within smart contracts
 import "hardhat/console.sol";
+import "./interfaces/IMultisig.sol";
 
 contract Multisig {
 
@@ -89,10 +90,12 @@ contract Multisig {
 
     constructor(
         string memory _societyName,
-        uint256 _deposit
+        uint256 _deposit,
+        address _owner
     ) {
-        isNewMember[msg.sender] = true;
-
+        owners.push(_owner);
+        isOwner[_owner] = true;
+        isNewMember[_owner] = true;
         societyName = _societyName;
         // superowner to pay the deposit
         deposit = _deposit;
@@ -102,11 +105,18 @@ contract Multisig {
     function addNewMember(address _newMember) external onlyOwner {
         isNewMember[_newMember] = true;
     }
-
+    
+    // Function to receive Ether. msg.data must be empty
+    receive() external payable {
+        newOwner();
+    }
+    
     // add new member as owner after receving deposit
     function newOwner() public payable {
+        console.log(msg.sender);
+        console.log(isNewMember[msg.sender]);
         require(
-            isNewMember[msg.sender] == true,
+            isNewMember[msg.sender],
             "You are not a new member. You cannot interact with this function."
         );
         // check if the value being sent is equal to the required deposit
@@ -165,7 +175,7 @@ contract Multisig {
         isApproved[_txIndex][msg.sender] = true;
         serviceTransaction.numApprovals ++;
 
-        emit ApproaveTransactionPropasal(msg.sender, _txIndex);
+        emit ApproveTransactionPropasal(msg.sender, _txIndex);
     }
 
     function revokeApproval(uint _txIndex)
@@ -199,7 +209,7 @@ contract Multisig {
 
         serviceTransaction.executed = true;
 
-        (bool success, ) = serviceTransaction.to.call.value(serviceTransaction.amount)(serviceTransaction.data);
+        (bool success, ) = payable(serviceTransaction.to).call{value: serviceTransaction.amount}(serviceTransaction.data);
         require(success, "Transaction failed");
 
         emit ExecuteTransaction(msg.sender, _txIndex);

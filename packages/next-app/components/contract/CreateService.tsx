@@ -4,6 +4,7 @@ import { useContract, useSigner } from "wagmi";
 
 import contracts from "@/contracts/hardhat_contracts.json";
 import { NETWORK_ID } from "@/config";
+import { ethers } from "ethers";
 
 export const CreateService = () => {
   const router = useRouter();
@@ -32,7 +33,7 @@ export const CreateService = () => {
     try {
       const tx = multisigContract.submitTransactionProposal(
         contractorAddress,
-        amount,
+        ethers.utils.parseEther(amount.toString()),
         serviceDescription
       );
       console.log("tx", tx);

@@ -3,6 +3,7 @@ import { useContract, useSigner } from "wagmi";
 
 import contracts from "@/contracts/hardhat_contracts.json";
 import { NETWORK_ID } from "@/config";
+import { ethers } from "ethers";
 
 type CreateMultisigProps = {
   refetch: () => void;
@@ -34,10 +35,11 @@ export const CreateMultisig = ({ refetch }: CreateMultisigProps) => {
     setCreatingMultisig(true);
 
     try {
-      const tx = await multisigFactoryContract.createMultisig(name, deposit);
+      const tx = await multisigFactoryContract.createMultisig(name, ethers.utils.parseEther(deposit.toString()));
       tx.wait(1).then(() => {
         setName("");
         setDeposit(0);
+        console.log("Deposit value set to", deposit);
         refetch();
         setCreatingMultisig(false);
       });

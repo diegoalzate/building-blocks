@@ -4,6 +4,7 @@ import { useContract, useSigner, useAccount } from "wagmi";
 
 import contracts from "@/contracts/hardhat_contracts.json";
 import { NETWORK_ID } from "@/config";
+import { ethers } from "ethers";
 
 export const ServiceApproval = () => {
   const router = useRouter();
@@ -97,7 +98,7 @@ export const ServiceApproval = () => {
           <p className="py-2">Contractor Address : {serviceData.to}</p>
           <p className="py-2">Service Description : {serviceData.data}</p>
           <p className="py-2">
-            Service Amount : {serviceData.amount.toString()}
+            Service Amount : {ethers.utils.formatEther(serviceData.amount.toString())} MATIC
           </p>
         </div>
         {isOwner && (

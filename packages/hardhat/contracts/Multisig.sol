@@ -4,7 +4,7 @@ pragma solidity ^0.8.10;
 // ability to console log within smart contracts
 import "hardhat/console.sol";
 import "./interfaces/IMultisig.sol";
-import "./PriceConsumerV3.sol";
+import "./PriceConverter.sol";
 
 contract Multisig {
     event NewOwner(
@@ -102,6 +102,7 @@ contract Multisig {
         isNewMember[_owner] = true;
         societyName = _societyName;
         // superowner to pay the deposit
+        // deposit = _deposit * 10 ** 18;
         deposit = _deposit;
     }
 
@@ -119,6 +120,7 @@ contract Multisig {
     function newOwner() public payable {
         console.log(msg.sender);
         console.log(isNewMember[msg.sender]);
+        console.log("The deposit amount is", deposit);
         require(
             isNewMember[msg.sender],
             "You are not a new member. You cannot interact with this function."
@@ -155,6 +157,7 @@ contract Multisig {
         serviceTransactions.push(
             ServiceTransaction({
                 to: _to,
+                // amount: _amount * 10 ** 18,
                 amount: _amount,
                 data: _data,
                 executed: false,

@@ -5,7 +5,7 @@
       "chainId": "80001",
       "contracts": {
         "MultisigFactory": {
-          "address": "0xfC24582299f5bCc1E54d274B04bAF0ED9050D9D5",
+          "address": "0xae50207a008DEf7c31008C6195dFBf5F08786d57",
           "abi": [
             {
               "anonymous": false,
@@ -200,7 +200,7 @@
           ]
         },
         "Multisig": {
-          "address": "0xD5D062f6b427BA07deFcBf53061c3ad50E65263e",
+          "address": "0x0B2431B7c915E047d318f4B4C4C68AF66178eEf9",
           "abi": [
             {
               "inputs": [
@@ -397,6 +397,19 @@
               "name": "executeTransaction",
               "outputs": [],
               "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "getMultisigBalance",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
               "type": "function"
             },
             {

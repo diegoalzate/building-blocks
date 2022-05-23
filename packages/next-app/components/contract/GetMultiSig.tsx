@@ -4,6 +4,7 @@ import { useContract, useSigner, useAccount } from "wagmi";
 
 import contracts from "@/contracts/hardhat_contracts.json";
 import { NETWORK_ID } from "@/config";
+import { ethers } from "ethers";
 
 export const GetMultiSig = () => {
   const router = useRouter();
@@ -17,6 +18,7 @@ export const GetMultiSig = () => {
   const [societyDeposit, setSocietyDeposit] = useState<any>();
   const [addOwner, setAddOwner] = useState("");
   const [serviceData, setServiceData] = useState<any>();
+  const [societyBalance, setSocietyBalance] = useState("");
 
   const allContracts = contracts as any;
   const multisigABI = allContracts[chainId][0].contracts.Multisig.abi;
@@ -47,6 +49,10 @@ export const GetMultiSig = () => {
     );
     console.log("isNewMember", isNewMember);
     setIsMember(isNewMember);
+
+    const getMultisigBalance = await multisigContract.getMultisigBalance();
+    console.log("society balance", getMultisigBalance.toString())
+    setSocietyBalance(getMultisigBalance);
 
     try {
       const serviceContract = await multisigContract.serviceTransactions(0);
@@ -116,7 +122,8 @@ export const GetMultiSig = () => {
       <div className="bg-white border-4 rounded-md border-bbGray-100 flex flex-col space-y-24 p-8 items-center">
         <div className="flex flex-col space-y-2 text-bbGray-100 font-medium">
           <p>Contract Address: {address}</p>
-          <p>Society balance: $100</p>
+          <p>Society balance: {societyBalance.toString()} WEI </p>
+          {/* <p>Society balance: {ethers.utils.formatEther(societyBalance.toString())} MATIC</p> */}
         </div>
         {isOwner && (
           <div className="flex flex-col space-y-2 text-bbGray-100 font-medium w-full">
@@ -146,7 +153,7 @@ export const GetMultiSig = () => {
               onClick={() => handleDeposit()}
               className="border-4 border-bbGray-100 bg-bbYellow-300 rounded-md py-2 px-4 font-bold text-xl"
             >
-              Deposit {societyDeposit.toString()}
+              Deposit {ethers.utils.formatEther(societyDeposit.toString())} MATIC
             </button>
           )}
           {isOwner && (

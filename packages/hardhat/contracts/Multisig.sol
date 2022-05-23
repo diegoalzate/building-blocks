@@ -108,8 +108,8 @@ contract Multisig {
         societyName = _societyName;
         s_priceFeed = AggregatorV3Interface(_priceFeed);
         // superowner to pay the deposit
-        deposit = _deposit.getConversionRate(s_priceFeed);
-        console.log(deposit.getConversionRate(s_priceFeed));
+        // deposit = _deposit * 10 ** 18;
+        deposit = _deposit;
     }
 
     // function to add new member to whitelist
@@ -126,6 +126,7 @@ contract Multisig {
     function newOwner() public payable {
         console.log(msg.sender);
         console.log(isNewMember[msg.sender]);
+        console.log("The deposit amount is", deposit);
         require(
             isNewMember[msg.sender],
             "You are not a new member. You cannot interact with this function."
@@ -163,6 +164,7 @@ contract Multisig {
         serviceTransactions.push(
             ServiceTransaction({
                 to: _to,
+                // amount: _amount * 10 ** 18,
                 amount: _amount,
                 data: _data,
                 executed: false,
@@ -247,5 +249,9 @@ contract Multisig {
     // function to get owners
     function getOwners() public view returns (address[] memory) {
         return owners;
+    }
+
+    function getMultisigBalance() public view returns (uint) {
+        return address(this).balance;
     }
 }

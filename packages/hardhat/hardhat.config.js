@@ -72,7 +72,8 @@ module.exports = {
     mumbai: {
       chainId: 80001,
       url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`,
-      accounts: [`${process.env.MUMBAI_PRIVATE_KEY}`],
+      // url: `https://polygon-mumbai.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_ID}`,
+      accounts: [`${process.env.PRIVATE_KEY}`],
     },
   },
   namedAccounts: {

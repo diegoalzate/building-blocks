@@ -4,7 +4,7 @@ import NextHead from "next/head";
 import { AppLayout } from "@/components/layout/AppLayout";
 
 // Imports
-import { chain, createClient, WagmiProvider } from "wagmi";
+import { chain, createClient, WagmiConfig } from "wagmi";
 
 import "@rainbow-me/rainbowkit/styles.css";
 
@@ -30,6 +30,7 @@ const hardhatChain: Chain = {
     name: "Hardhat",
     symbol: "HARD",
   },
+  network: "hardhat",
   rpcUrls: {
     default: "http://127.0.0.1:8545",
   },
@@ -57,7 +58,7 @@ const App = ({ Component, pageProps }: AppProps) => {
 
   if (!isMounted) return null;
   return (
-    <WagmiProvider client={wagmiClient}>
+    <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider coolMode chains={chains}>
         <NextHead>
           <title>Building Blocks</title>
@@ -66,7 +67,7 @@ const App = ({ Component, pageProps }: AppProps) => {
           <Component {...pageProps} />
         </AppLayout>
       </RainbowKitProvider>
-    </WagmiProvider>
+    </WagmiConfig>
   );
 };
 

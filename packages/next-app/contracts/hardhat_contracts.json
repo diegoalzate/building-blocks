@@ -5,7 +5,7 @@
       "chainId": "80001",
       "contracts": {
         "MultisigFactory": {
-          "address": "0xae50207a008DEf7c31008C6195dFBf5F08786d57",
+          "address": "0x107086Bd59d33499180B3dCe5A9B7C2ee6Ef35aF",
           "abi": [
             {
               "anonymous": false,
@@ -103,6 +103,11 @@
                   "internalType": "uint256",
                   "name": "_deposit",
                   "type": "uint256"
+                },
+                {
+                  "internalType": "address",
+                  "name": "_priceFeed",
+                  "type": "address"
                 }
               ],
               "name": "createMultisig",
@@ -195,7 +200,7 @@
           ]
         },
         "Multisig": {
-          "address": "0x0B2431B7c915E047d318f4B4C4C68AF66178eEf9",
+          "address": "0x11D06ACbCD573600F96Ddf48Bf51ae5d4D3dC59B",
           "abi": [
             {
               "inputs": [
@@ -212,6 +217,11 @@
                 {
                   "internalType": "address",
                   "name": "_owner",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "_priceFeed",
                   "type": "address"
                 }
               ],
@@ -351,6 +361,19 @@
               "type": "function"
             },
             {
+              "inputs": [],
+              "name": "approveMaticToken",
+              "outputs": [
+                {
+                  "internalType": "bool",
+                  "name": "",
+                  "type": "bool"
+                }
+              ],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
               "inputs": [
                 {
                   "internalType": "uint256",
@@ -416,6 +439,19 @@
               "type": "function"
             },
             {
+              "inputs": [],
+              "name": "getPriceConverter",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
               "inputs": [
                 {
                   "internalType": "address",
@@ -457,7 +493,7 @@
               "inputs": [],
               "name": "newOwner",
               "outputs": [],
-              "stateMutability": "payable",
+              "stateMutability": "nonpayable",
               "type": "function"
             },
             {
@@ -503,6 +539,19 @@
               "name": "revokeApproval",
               "outputs": [],
               "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "s_priceFeed",
+              "outputs": [
+                {
+                  "internalType": "contract AggregatorV3Interface",
+                  "name": "",
+                  "type": "address"
+                }
+              ],
+              "stateMutability": "view",
               "type": "function"
             },
             {

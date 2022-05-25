@@ -4,7 +4,7 @@ import { useContract, useSigner, useAccount } from "wagmi";
 
 import contracts from "@/contracts/hardhat_contracts.json";
 import { NETWORK_ID } from "@/config";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 
 export const GetMultiSig = () => {
   const router = useRouter();
@@ -41,7 +41,6 @@ export const GetMultiSig = () => {
     setIsOwner(owner);
 
     const deposit = await multisigContract.deposit();
-    // console.log("deposit", deposit);
     setSocietyDeposit(deposit);
 
     const isNewMember = await multisigContract.isNewMember(
@@ -89,9 +88,7 @@ export const GetMultiSig = () => {
 
   const handleDeposit = async () => {
     try {
-      const tx = await multisigContract.newOwner({
-        value: societyDeposit,
-      });
+      const tx = await multisigContract.newOwner();
       tx.wait(1).then(() => {
         fetchData();
       });
@@ -122,7 +119,7 @@ export const GetMultiSig = () => {
       <div className="bg-white border-4 rounded-md border-bbGray-100 flex flex-col space-y-24 p-8 items-center">
         <div className="flex flex-col space-y-2 text-bbGray-100 font-medium">
           <p>Contract Address: {address}</p>
-          <p>Society balance: {societyBalance.toString()} WEI </p>
+          <p>Society balance: {societyBalance.toString()} MATIC </p>
           {/* <p>Society balance: {ethers.utils.formatEther(societyBalance.toString())} MATIC</p> */}
         </div>
         {isOwner && (
@@ -153,7 +150,7 @@ export const GetMultiSig = () => {
               onClick={() => handleDeposit()}
               className="border-4 border-bbGray-100 bg-bbYellow-300 rounded-md py-2 px-4 font-bold text-xl"
             >
-              Deposit {ethers.utils.formatEther(societyDeposit.toString())} MATIC
+              Deposit {ethers.utils.formatEther(societyDeposit)} USD
             </button>
           )}
           {isOwner && (

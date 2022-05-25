@@ -10,6 +10,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     "Test Society",
     1,
     "0x0000000000000000000000000000000000000000",
+    "0xd0D5e3DB44DE05E9F294BB0a3bEEaF030DE24Ada"
   ];
 
   // fetches the deployed MultisigFactory contract

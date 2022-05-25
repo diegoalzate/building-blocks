@@ -3,10 +3,12 @@ pragma solidity ^0.8.10;
 
 // ability to console log within smart contracts
 import "hardhat/console.sol";
-import "./interfaces/IMultisig.sol";
 import "./PriceConverter.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract Multisig {
+    using PriceConverter for uint256; 
+    IERC20 maticToken;
     event NewOwner(
         address indexed owner,
         uint256 depositAmount,
@@ -45,6 +47,9 @@ contract Multisig {
     // intial deposit to join society and become an owner
     uint256 public deposit;
 
+    // chainlink pricefeed
+    AggregatorV3Interface public s_priceFeed;
+    
     // struct for intiating a transaction to pay for a service
     struct ServiceTransaction {
         // address to be paid
@@ -96,14 +101,16 @@ contract Multisig {
 
     constructor(
         string memory _societyName,
-        uint256 _deposit,
-        address _owner
+        uint256 _deposit, //uint that represents usd
+        address _owner,
+        address _priceFeed
     ) {
         isNewMember[_owner] = true;
         societyName = _societyName;
+        s_priceFeed = AggregatorV3Interface(_priceFeed);
         // superowner to pay the deposit
-        // deposit = _deposit * 10 ** 18;
-        deposit = _deposit;
+        deposit = _deposit * 10 ** 18;
+        maticToken = IERC20(0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889);
     }
 
     // function to add new member to whitelist
@@ -112,27 +119,21 @@ contract Multisig {
     }
 
     // Function to receive Ether. msg.data must be empty
-    receive() external payable {
-        newOwner();
-    }
+    receive() external payable {}
 
     // add new member as owner after receving deposit
-    function newOwner() public payable {
-        console.log(msg.sender);
-        console.log(isNewMember[msg.sender]);
-        console.log("The deposit amount is", deposit);
+    function newOwner() public {
         require(
             isNewMember[msg.sender],
             "You are not a new member. You cannot interact with this function."
         );
-        // check if the value being sent is equal to the required deposit
-        require(msg.value == deposit, "Value is not equal to deposit value.");
-
         // check if person has enough funds
         require(
-            msg.sender.balance > msg.value,
+            maticToken.balanceOf(msg.sender) >= deposit.getConversionRate(s_priceFeed),
             "Insufficient balance. Please add funds."
         );
+        bool success = maticToken.transferFrom(msg.sender, address(this), deposit.getConversionRate(s_priceFeed));
+        require(success, "Failed to transfer tokens to contract");
         isNewMember[msg.sender] = false;
         // add member to the list of owners
 
@@ -140,13 +141,12 @@ contract Multisig {
         // add new oner to the owner mapping
         isOwner[msg.sender] = true;
         // console log balance of new multisig contract
-        console.log(address(this).balance);
+        console.log(getMultisigBalance());
 
         emit NewOwner(msg.sender, deposit, address(this).balance);
     }
 
     // function to request payment for service
-
     function submitTransactionProposal(
         address _to,
         uint256 _amount,
@@ -229,13 +229,9 @@ contract Multisig {
             "Not enough approvals to execute transaction"
         );
 
-        serviceTransaction.executed = true;
-
-        (bool success, ) = payable(serviceTransaction.to).call{
-            value: serviceTransaction.amount
-        }(abi.encode(serviceTransaction.data));
+        (bool success) = maticToken.transfer(serviceTransaction.to, serviceTransaction.amount.getConversionRate(s_priceFeed));
         require(success, "Transaction failed");
-
+        serviceTransaction.executed = true;
         emit ExecuteTransaction(msg.sender, _txIndex);
     }
 
@@ -245,6 +241,10 @@ contract Multisig {
     }
 
     function getMultisigBalance() public view returns (uint) {
-        return address(this).balance;
+        return maticToken.balanceOf(address(this));
+    }
+    
+    function getPriceConverter() public view returns (uint256) {
+        return deposit.getConversionRate(s_priceFeed);
     }
 }

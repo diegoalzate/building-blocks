@@ -11,7 +11,7 @@ library PriceConverter {
   {
     (, int256 answer, , , ) = priceFeed.latestRoundData();
     // ETH/USD rate in 18 digit
-    return uint256(answer * 10000000000);
+    return uint256((1000000000000000000 ** 2) / (answer * 10000000000));
   }
 
   // 1000000000
@@ -23,7 +23,7 @@ library PriceConverter {
     returns (uint256)
   {
     uint256 cryptoPrice = getPrice(priceFeed);
-    uint256 usdInCryptoAmount = (cryptoPrice / cryptoAmount) * 1000000000000000000;
+    uint256 usdInCryptoAmount = (cryptoPrice * cryptoAmount) / 1000000000000000000;
     // the actual ETH/USD conversation rate, after adjusting the extra 0s.
     return usdInCryptoAmount;
   }

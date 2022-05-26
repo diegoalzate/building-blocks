@@ -57,7 +57,7 @@ contract MultisigFactory {
         return multisig.isNewMember(_memberAddress);
     }
 
-    function getAllMultigsUserWhereUserIsOwner(address _address) public returns (address[] memory) {
+    function getAllMultigsWhereUserIsOwner(address _address) public returns (address[] memory) {
         address[] memory multisigs = new address[](numMultisigs);
         for(uint i = 0; i < numMultisigs; i++) {
             bool isOwner = checkIfUserIsOwner(allMultisig[i]._contract, _address);
@@ -69,7 +69,7 @@ contract MultisigFactory {
         return multisigs;
     }
 
-    function getAllMultisigsWhereUserIsOwner(address _address) public returns (address[] memory) {
+    function getAllMultisigsWhereUserIsMember(address _address) public returns (address[] memory) {
         address[] memory multisigs = new address[](numMultisigs);
         for(uint i = 0; i < numMultisigs; i++) {
             bool isOwner = checkIfUserIsMember(allMultisig[i]._contract, _address);

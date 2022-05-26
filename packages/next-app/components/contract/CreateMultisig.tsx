@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { useAccount, useContract, useSigner } from "wagmi";
+import { useContract, useSigner } from "wagmi";
 
 import contracts from "@/contracts/hardhat_contracts.json";
-import { NETWORK_ID } from "@/config";
+import { NETWORK_ID, MATIC_USD_PRICEFEED } from "@/config";
 import { ethers } from "ethers";
 
 type CreateMultisigProps = {
@@ -13,7 +13,9 @@ export const CreateMultisig = ({ refetch }: CreateMultisigProps) => {
   const chainId = Number(NETWORK_ID);
   const [name, setName] = useState("");
   const [deposit, setDeposit] = useState(0);
-  const [datafeed, setDatafeed] = useState("0xab594600376ec9fd91f8e885dadf0ce036862de0");
+  const [datafeed, setDatafeed] = useState(
+    "0xab594600376ec9fd91f8e885dadf0ce036862de0"
+  );
   const [creatingMultisig, setCreatingMultisig] = useState(false);
   const { data: signerData } = useSigner();
 
@@ -35,11 +37,15 @@ export const CreateMultisig = ({ refetch }: CreateMultisigProps) => {
     setCreatingMultisig(true);
 
     try {
-      const tx = await multisigFactoryContract.createMultisig(name, ethers.utils.parseEther(deposit.toString()), datafeed);
+      const tx = await multisigFactoryContract.createMultisig(
+        name,
+        ethers.utils.parseEther(deposit.toString()),
+        MATIC_USD_PRICEFEED
+      );
       tx.wait(1).then(() => {
         setName("");
         setDeposit(0);
-        console.log("Deposit value set to", deposit);
+        // console.log("Deposit value set to", deposit);
         refetch();
         setCreatingMultisig(false);
       });
@@ -69,7 +75,7 @@ export const CreateMultisig = ({ refetch }: CreateMultisigProps) => {
           </div>
           <div className="py-8">
             <label className="pl-4 text-bbGray-100 font-medium">
-              Deposit Amount in Currency
+              Deposit Amount in USD
             </label>
             <input
               className="border-4 m-1 p-2 rounded-lg border-bbGray-100 w-full"
@@ -81,13 +87,14 @@ export const CreateMultisig = ({ refetch }: CreateMultisigProps) => {
             />
           </div>
           <div className="py-8">
-            <label className="pl-4 text-bbGray-100 font-medium">
-              Currency
-            </label>
-            <select className="border-4 m-1 p-2 rounded-lg border-bbGray-100 w-full" value={datafeed} onChange={(e) => 
-              setDatafeed(e.target.value)
-            }>
-              <option value="0xab594600376ec9fd91f8e885dadf0ce036862de0">USD
+            <label className="pl-4 text-bbGray-100 font-medium">Currency</label>
+            <select
+              className="border-4 m-1 p-2 rounded-lg border-bbGray-100 w-full"
+              value={datafeed}
+              onChange={(e) => setDatafeed(e.target.value)}
+            >
+              <option value="0xab594600376ec9fd91f8e885dadf0ce036862de0">
+                USD
               </option>
             </select>
           </div>

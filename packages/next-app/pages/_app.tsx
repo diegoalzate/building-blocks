@@ -4,13 +4,13 @@ import NextHead from "next/head";
 import { AppLayout } from "@/components/layout/AppLayout";
 
 // Imports
-import { chain, createClient, WagmiConfig } from "wagmi";
+import { chain, createClient, WagmiConfig, configureChains } from "wagmi";
+import { alchemyProvider } from "wagmi/providers/alchemy";
+import { publicProvider } from "wagmi/providers/public";
 
 import "@rainbow-me/rainbowkit/styles.css";
 
 import {
-  apiProvider,
-  configureChains,
   getDefaultWallets,
   RainbowKitProvider,
   Chain,
@@ -38,8 +38,9 @@ const hardhatChain: Chain = {
 };
 
 const { chains, provider } = configureChains(
-  [chain.polygon, chain.polygonMumbai, hardhatChain],
-  [apiProvider.alchemy(alchemyId), apiProvider.fallback()]
+  // [chain.polygon, chain.polygonMumbai, hardhatChain],
+  [chain.polygonMumbai],
+  [alchemyProvider({ alchemyId }), publicProvider()]
 );
 
 const { connectors } = getDefaultWallets({

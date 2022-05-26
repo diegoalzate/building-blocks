@@ -109,7 +109,7 @@ contract Multisig {
         societyName = _societyName;
         s_priceFeed = AggregatorV3Interface(_priceFeed);
         // superowner to pay the deposit
-        deposit = _deposit * 10 ** 18;
+        deposit = _deposit;
         maticToken = IERC20(0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889);
     }
 

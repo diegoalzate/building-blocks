@@ -43,20 +43,6 @@ export const GetMultiSig = () => {
   });
   // console.log("multisigContract", multisigContract);
 
-  const { write } = useContractWrite(
-    {
-      addressOrName: WMATIC_TOKEN_ADDRESS,
-      contractInterface: erc20ABI,
-    },
-    "approve",
-    {
-      args: [address, maticDepositBigNumber],
-      onSuccess() {
-        handleDeposit();
-      },
-    }
-  );
-
   const fetchData = async () => {
     const name = await multisigContract.societyName();
     setSocietyName(name);
@@ -120,19 +106,11 @@ export const GetMultiSig = () => {
     }
   };
 
-  const handleApproval = async () => {
-    setIsPending(true);
-    try {
-      write();
-    } catch (e) {
-      console.log("error", e);
-    }
-  };
-
   const handleDeposit = async () => {
     try {
       const tx = await multisigContract.newOwner({
         gasLimit: "1000000",
+        value: maticDepositBigNumber
       });
       tx.wait(1).then(() => {
         fetchData();
@@ -198,10 +176,10 @@ export const GetMultiSig = () => {
               {isMember && societyDeposit && (
                 <div>
                   <button
-                    onClick={() => handleApproval()}
+                    onClick={() => handleDeposit()}
                     className="border-4 border-bbGray-100 bg-bbYellow-300 rounded-md py-2 px-4 font-bold text-xl"
                   >
-                    Approve {societyDeposit} USD
+                    Deposit {societyDeposit} USD
                   </button>
                   <div className="text-center text-bbGray-100">
                     ≈ {maticDeposit.toFixed(4)} MATIC

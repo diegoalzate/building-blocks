@@ -201,7 +201,7 @@ export const GetMultiSig = () => {
                     onClick={() => handleApproval()}
                     className="border-4 border-bbGray-100 bg-bbYellow-300 rounded-md py-2 px-4 font-bold text-xl"
                   >
-                    Deposit {societyDeposit} USD
+                    Approve {societyDeposit} USD
                   </button>
                   <div className="text-center text-bbGray-100">
                     ≈ {maticDeposit.toFixed(4)} MATIC

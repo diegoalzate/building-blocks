@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { useContract, useSigner } from "wagmi";
+import { useContract, useSigner, useAccount } from "wagmi";
 
 import contracts from "@/contracts/hardhat_contracts.json";
 import { NETWORK_ID } from "@/config";
@@ -16,6 +16,7 @@ export const GetAllMultisigs = () => {
   const [multisigInfo, setMultisigInfo] = useState<Array<multisigProps>>([]);
 
   const { data: signerData } = useSigner();
+  const { data: accountData } = useAccount();
 
   const allContracts = contracts as any;
   const multisigFactoryAddress =
@@ -45,9 +46,18 @@ export const GetAllMultisigs = () => {
     setMultisigInfo(multisigInfo);
   };
 
+  const handleGetMultisigsForUser = async () => {
+    const result =
+      await multisigFactoryContract.getAllMultisigsWhereUserIsOwner(
+        accountData?.address
+      );
+    console.log("result", result);
+  };
+
   const refresh = async () => {
     await handleGetAllMultisig();
     await handleGetMultisigInfo();
+    // await handleGetMultisigsForUser();
   };
 
   useEffect(() => {

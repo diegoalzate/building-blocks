@@ -5,7 +5,7 @@
       "chainId": "80001",
       "contracts": {
         "MultisigFactory": {
-          "address": "0x84869ce8f927F2941843E5259737cB8679093325",
+          "address": "0xDb372dFe84bE140A906B64460Aaf518a15134Eeb",
           "abi": [
             {
               "anonymous": false,
@@ -200,7 +200,7 @@
           ]
         },
         "Multisig": {
-          "address": "0xB7cDa8587Cf232bc3ECC1FDdBC4a79C660E2953B",
+          "address": "0x3B2E5Ad245EDabd667e33A049393d285a500bAf5",
           "abi": [
             {
               "inputs": [
@@ -477,6 +477,24 @@
               "type": "function"
             },
             {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "_txIndex",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "string",
+                  "name": "_uri",
+                  "type": "string"
+                }
+              ],
+              "name": "mintTransactionAsNFT",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
               "inputs": [],
               "name": "newOwner",
               "outputs": [],
@@ -552,6 +570,11 @@
               "name": "serviceTransactions",
               "outputs": [
                 {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+                },
+                {
                   "internalType": "address",
                   "name": "to",
                   "type": "address"
@@ -578,6 +601,19 @@
                 }
               ],
               "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "_nftMinter",
+                  "type": "address"
+                }
+              ],
+              "name": "setNFTMinterAddress",
+              "outputs": [],
+              "stateMutability": "nonpayable",
               "type": "function"
             },
             {

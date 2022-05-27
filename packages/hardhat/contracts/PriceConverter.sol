@@ -10,7 +10,7 @@ library PriceConverter {
     returns (uint256)
   {
     (, int256 answer, , , ) = priceFeed.latestRoundData();
-    // ETH/USD rate in 18 digit
+    // MATIC/USD
     return uint256((1000000000000000000 ** 2) / (answer * 10000000000));
   }
 

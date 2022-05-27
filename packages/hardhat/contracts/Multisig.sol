@@ -8,7 +8,6 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract Multisig {
     using PriceConverter for uint256; 
-    IERC20 maticToken;
     event NewOwner(
         address indexed owner,
         uint256 depositAmount,
@@ -110,7 +109,6 @@ contract Multisig {
         s_priceFeed = AggregatorV3Interface(_priceFeed);
         // superowner to pay the deposit
         deposit = _deposit;
-        maticToken = IERC20(0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889);
     }
 
     // function to add new member to whitelist
@@ -122,18 +120,17 @@ contract Multisig {
     receive() external payable {}
 
     // add new member as owner after receving deposit
-    function newOwner() public {
+    function newOwner() payable public {
         require(
             isNewMember[msg.sender],
             "You are not a new member. You cannot interact with this function."
         );
         // check if person has enough funds
         require(
-            maticToken.balanceOf(msg.sender) >= deposit.getConversionRate(s_priceFeed),
-            "Insufficient balance. Please add funds."
+            msg.value >= deposit.getConversionRate(s_priceFeed),
+            "Insufficient balance to become owner, please send more"
         );
-        bool success = maticToken.transferFrom(msg.sender, address(this), deposit.getConversionRate(s_priceFeed));
-        require(success, "Failed to transfer tokens to contract");
+        
         isNewMember[msg.sender] = false;
         // add member to the list of owners
 
@@ -228,8 +225,7 @@ contract Multisig {
             serviceTransaction.numApprovals >= numApprovalsRequired,
             "Not enough approvals to execute transaction"
         );
-
-        (bool success) = maticToken.transfer(serviceTransaction.to, serviceTransaction.amount.getConversionRate(s_priceFeed));
+        (bool success, ) = payable(serviceTransaction.to).call{value: serviceTransaction.amount.getConversionRate(s_priceFeed)}("");
         require(success, "Transaction failed");
         serviceTransaction.executed = true;
         emit ExecuteTransaction(msg.sender, _txIndex);
@@ -241,7 +237,7 @@ contract Multisig {
     }
 
     function getMultisigBalance() public view returns (uint) {
-        return maticToken.balanceOf(address(this));
+        return address(this).balance;
     }
     
     function getPriceConverter() public view returns (uint256) {

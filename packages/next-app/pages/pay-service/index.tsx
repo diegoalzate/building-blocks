@@ -3,7 +3,7 @@ import { ServiceApproval } from "@/components/contract";
 
 const PayServicePage: NextPage = () => {
   return (
-    <div className={"h-screen"}>
+    <div className="">
       <ServiceApproval />
     </div>
   );

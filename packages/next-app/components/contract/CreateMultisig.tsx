@@ -85,7 +85,7 @@ export const CreateMultisig = ({ refetch }: CreateMultisigProps) => {
               onChange={(e) => setDeposit(Number(e.target.value))}
             />
           </div>
-          <div className="py-6">
+          {/* <div className="py-6">
             <label className="pl-4 text-bbGray-100 font-medium">Currency</label>
             <select
               className="border-4 m-1 p-2 rounded-lg border-bbGray-100 w-full"
@@ -96,7 +96,7 @@ export const CreateMultisig = ({ refetch }: CreateMultisigProps) => {
                 USD
               </option>
             </select>
-          </div>
+          </div> */}
           <div className="flex justify-center py-8">
             <button
               onClick={() => handleCreateMultisig()}

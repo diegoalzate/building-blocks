@@ -7,6 +7,8 @@ import { NETWORK_ID } from "@/config";
 
 import { Container } from "@/components/elements";
 
+import { addressShortener } from "@/utils/addressShortener";
+
 interface multisigProps {
   _contract: string;
 }
@@ -88,7 +90,10 @@ export const GetAllMultisigs = () => {
                 className="cursor-pointer border-2 border-bbGray-100 my-2 py-2 rounded text-bbGray-100 hover:bg-bbBlue-100 font-medium w-full"
                 onClick={() => router.push(`/multisig/${multisig._contract}`)}
               >
-                {multisig._contract}
+                <span className="hidden sm:block">{multisig._contract}</span>
+                <span className="block sm:hidden">
+                  {addressShortener(multisig._contract)}
+                </span>
               </button>
             </div>
           ))}

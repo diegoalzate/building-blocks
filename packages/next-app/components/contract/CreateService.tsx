@@ -106,7 +106,9 @@ export const CreateService = () => {
           </div>
         </div>
       ) : (
-        <Loading />
+        <div className="h-96 grid grid-cols-1 content-center">
+          <Loading />
+        </div>
       )}
     </div>
   );

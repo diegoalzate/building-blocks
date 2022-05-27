@@ -4,7 +4,7 @@ import { useContract, useSigner, useAccount } from "wagmi";
 
 import contracts from "@/contracts/hardhat_contracts.json";
 import { NETWORK_ID, EIGHTEENZERO } from "@/config";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 
 import { Container, Loading } from "@/components/elements";
 import { ExternalLinkIcon, BackspaceIcon } from "@heroicons/react/outline";
@@ -28,8 +28,8 @@ export const GetMultiSig = () => {
   const [maticDepositBigNumber, setMaticDepositBigNumber] = useState<any>();
 
   const [addOwner, setAddOwner] = useState("");
-  const [serviceData, setServiceData] = useState<any>();
   const [societyBalance, setSocietyBalance] = useState(0);
+  const [allServices, setAllServices] = useState<any>();
 
   const allContracts = contracts as any;
   const multisigABI = allContracts[chainId][0].contracts.Multisig.abi;
@@ -43,6 +43,7 @@ export const GetMultiSig = () => {
   // console.log("multisigContract", multisigContract);
 
   const fetchData = async () => {
+    // console.log("fetchData");
     const name = await multisigContract.societyName();
     setSocietyName(name);
 
@@ -71,10 +72,9 @@ export const GetMultiSig = () => {
     setSocietyBalance(getMultisigBalance);
 
     try {
-      // console.log(multisigContract);
-      const serviceContract = await multisigContract.serviceTransactions(0);
-      // console.log("serviceContract", serviceContract);
-      if (serviceContract) setServiceData(serviceContract);
+      const getServiceTransactions =
+        await multisigContract.getServiceTransactions();
+      if (getServiceTransactions) setAllServices(getServiceTransactions);
     } catch (error) {
       // console.log("error", error);
     }
@@ -122,10 +122,10 @@ export const GetMultiSig = () => {
     }
   };
 
-  const handleExcutePayment = async () => {
+  const handleExcutePayment = async (index: number) => {
     setIsPending(true);
     try {
-      const tx = await multisigContract.executeTransaction(0);
+      const tx = await multisigContract.executeTransaction(index);
       tx.wait(1).then(() => {
         fetchData();
         setIsPending(false);
@@ -135,8 +135,6 @@ export const GetMultiSig = () => {
       setIsPending(false);
     }
   };
-
-  // console.log("serviceData", serviceData);
 
   return (
     <main>
@@ -155,14 +153,11 @@ export const GetMultiSig = () => {
 
       <div className="mt-6">
         <Container>
-          <div className="flex flex-col space-y-2 text-bbGray-100 font-medium">
+          <div className="sm:flex text-bbGray-100 font-medium w-full justify-between">
             <p className="sm:flex">
-              Contract Address:{" "}
+              Contract Address:
               <span className="flex pl-4">
-                <span className="hidden sm:block">{address}</span>
-                <span className="block sm:hidden">
-                  {addressShortener(address as string)}
-                </span>{" "}
+                <span className="">{addressShortener(address as string)}</span>
                 <a
                   href={`https://mumbai.polygonscan.com/address/${address}`}
                   target="_blank"
@@ -173,7 +168,7 @@ export const GetMultiSig = () => {
               </span>
             </p>
             <p>
-              Society balance:{" "}
+              Balance:
               <span className="pl-4 pr-2">
                 {(societyBalance / EIGHTEENZERO).toFixed(4)}
               </span>
@@ -181,7 +176,7 @@ export const GetMultiSig = () => {
             </p>
           </div>
           {isOwner && (
-            <div className="flex flex-col space-y-2 text-bbGray-100 font-medium w-full mt-8">
+            <div className="flex flex-col space-y-2 text-bbGray-100 font-medium w-full mt-4">
               <label className="pl-4 text-bbGray-100 font-medium">
                 Add Member by Address
               </label>
@@ -202,7 +197,7 @@ export const GetMultiSig = () => {
             </div>
           )}
 
-          <div className="flex flex-col space-y-4 mt-12">
+          <div className="mt-8 w-full">
             {isPending ? (
               <div className="">
                 <Loading />
@@ -213,85 +208,45 @@ export const GetMultiSig = () => {
                   <div>
                     <button
                       onClick={() => handleDeposit()}
-                      className="border-4 border-bbGray-100 bg-bbYellow-300 rounded-md py-2 px-4 font-bold text-xl"
+                      className="border-4 border-bbGray-100 bg-bbYellow-300 rounded-md py-2 px-4 font-bold text-xl w-full"
                     >
                       Deposit {societyDeposit} USD
                     </button>
                     <div className="text-center text-bbGray-100">
-                      ≈ {maticDeposit.toFixed(4)} MATIC
+                      ≈ {maticDeposit.toFixed(4)} MATIC + gas
                     </div>
                   </div>
                 )}
                 {isOwner && (
                   <>
-                    {!serviceData && (
-                      <button
-                        onClick={() =>
-                          router.push(`/create-service?contract=${address}`)
-                        }
-                        className="border-4 border-bbGray-100 bg-bbYellow-300 rounded-md py-2 px-4 font-bold text-xl"
-                      >
-                        Create Service
-                      </button>
-                    )}
+                    <button
+                      onClick={() =>
+                        router.push(`/create-service?contract=${address}`)
+                      }
+                      className="border-4 border-bbGray-100 bg-bbYellow-300 rounded-md py-2 px-4 font-bold text-xl w-full"
+                    >
+                      Create New Service
+                    </button>
 
-                    {serviceData && (
-                      <div className="flex flex-col space-y-2 text-bbGray-100 font-medium">
-                        <p className="sm:flex">
-                          Service Address:{" "}
-                          <span className="flex pl-4">
-                            <span className="">
-                              {addressShortener(serviceData.to)}
-                            </span>
-                            <a
-                              href={`https://mumbai.polygonscan.com/address/${serviceData.to}`}
-                              target="_blank"
-                              rel="noreferrer noopener"
-                            >
-                              <ExternalLinkIcon className="text-bbGray-100 h-5 w-5 ml-4 mt-0.5 hover:text-bbBlue-200" />
-                            </a>
-                          </span>
-                        </p>
-                        <p>
-                          Service fee:
-                          <span className="pl-4 pr-2">
-                            {(serviceData.amount / EIGHTEENZERO).toFixed(4)}
-                          </span>
-                          USD
-                        </p>
-                        <p>
-                          Service description:
-                          <span className="pl-4 pr-2">{serviceData.data}</span>
-                        </p>
-                        {!serviceData.executed && (
-                          <button
-                            onClick={() =>
-                              router.push(`/pay-service?contract=${address}`)
+                    {allServices && allServices.length > 0 && (
+                      <div className="w-full mt-4">
+                        <div className="text-center text-bbGray-100 font-bold text-xl py-2">
+                          Services
+                        </div>
+                        {allServices.map((service: any, index: number) => (
+                          <ServiceItem
+                            key={index}
+                            index={index}
+                            service={service}
+                            contract={address as string}
+                            handleExcutePayment={() =>
+                              handleExcutePayment(index)
                             }
-                            className="border-4 border-bbGray-100 bg-bbBlue-200 rounded-md py-2 px-4 font-bold text-xl text-white"
-                          >
-                            Agree For Service
-                          </button>
-                        )}
+                          />
+                        ))}
                       </div>
                     )}
-
-                    {serviceData &&
-                      serviceData.numApprovals.toString() > 0 &&
-                      !serviceData.executed && (
-                        <button
-                          onClick={() => handleExcutePayment()}
-                          className="border-4 border-bbGray-100 bg-bbBlue-200 rounded-md py-2 px-4 font-bold text-xl text-white"
-                        >
-                          Excute Payment
-                        </button>
-                      )}
                   </>
-                )}
-                {serviceData && serviceData.executed && (
-                  <div className="flex flex-col space-y-2 text-bbGreen-200 font-bold text-2xl">
-                    Service Executed
-                  </div>
                 )}
               </>
             )}
@@ -299,5 +254,85 @@ export const GetMultiSig = () => {
         </Container>
       </div>
     </main>
+  );
+};
+
+interface ServiceItemProps {
+  service: {
+    amount: BigNumber | any;
+    data: string;
+    to: string;
+    executed: boolean;
+    numApprovals: BigNumber;
+    tokenId: BigNumber;
+  };
+  contract: string;
+  index: number;
+  handleExcutePayment: (index: number) => void;
+}
+
+const ServiceItem = ({
+  service,
+  contract,
+  index,
+  handleExcutePayment,
+}: ServiceItemProps) => {
+  const router = useRouter();
+
+  if (!service) return null;
+  return (
+    <div className="flex justify-between border-2 border-bbGray-100 rounded-lg p-2 my-1 text-bbGray-100 font-medium">
+      <div>
+        <p className="sm:flex">
+          Contractor Address:
+          <span className="flex pl-4">
+            <span className="">{addressShortener(service.to)}</span>
+            <a
+              href={`https://mumbai.polygonscan.com/address/${service.to}`}
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              <ExternalLinkIcon className="text-bbGray-100 h-5 w-5 ml-4 mt-0.5 hover:text-bbBlue-200" />
+            </a>
+          </span>
+        </p>
+        <p>
+          Fee:
+          <span className="pl-4 pr-2">
+            {(service.amount / EIGHTEENZERO).toFixed(4)}
+          </span>
+          USD
+        </p>
+        <p>
+          Description:
+          <span className="pl-4 pr-2">{service.data}</span>
+        </p>
+      </div>
+      <div className="m-auto space-y-2 flex flex-col">
+        {!service.executed && (
+          <button
+            onClick={() =>
+              router.push(`/pay-service?contract=${contract}&index=${index}`)
+            }
+            className="border-4 border-bbGray-100 bg-bbBlue-200 rounded-md py-1 px-4 font-bold text-lg text-white"
+          >
+            Agree For Service
+          </button>
+        )}
+        {!service.executed && service.numApprovals._hex !== "0x00" && (
+          <button
+            onClick={() => handleExcutePayment(index)}
+            className="border-4 border-bbGray-100 bg-bbBlue-200 rounded-md py-1 px-4 font-bold text-lg text-white"
+          >
+            Excute Payment
+          </button>
+        )}
+        {service && service.executed && (
+          <div className=" text-bbGreen-200 font-bold text-2xl">
+            Service Executed
+          </div>
+        )}
+      </div>
+    </div>
   );
 };

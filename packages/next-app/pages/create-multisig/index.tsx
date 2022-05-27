@@ -18,7 +18,7 @@ const CreateMultisigPage: NextPage = () => {
   };
   return (
     <div className="">
-      <div className="border-b border-gray-200">
+      <div className="border-b border-bbGray-100/10">
         <div className="sm:flex sm:items-baseline justify-center">
           <div className="mt-4 sm:mt-0 sm:ml-10">
             <nav className="-mb-px flex space-x-8">
@@ -28,8 +28,8 @@ const CreateMultisigPage: NextPage = () => {
                   onClick={() => setNav(tab.state)}
                   className={classNames(
                     tab.state === nav
-                      ? "border-bbBlue-200 text-bbBlue-200"
-                      : "border-transparent text-bbGray-100 hover:text-bbGreen-200 hover:border-bbGreen-200",
+                      ? "border-bbGreen-200 text-bbGreen-200"
+                      : "border-transparent text-bbGray-100 hover:text-bbBlue-200 hover:border-bbBlue-200",
                     "whitespace-nowrap pb-4 px-1 border-b-2 font-bold text-md"
                   )}
                   aria-current={tab.current ? "page" : undefined}

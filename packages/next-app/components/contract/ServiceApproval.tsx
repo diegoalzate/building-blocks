@@ -13,12 +13,13 @@ import { addressShortener } from "@/utils/addressShortener";
 
 export const ServiceApproval = () => {
   const router = useRouter();
-  const { contract } = router.query;
+  const { contract, index } = router.query;
 
   const [societyName, setSocietyName] = useState("");
   const [serviceData, setServiceData] = useState<any>();
   const [societyBalance, setSocietyBalance] = useState(0);
   const [isPending, setIsPending] = useState(false);
+  const [isApproved, setIsApproved] = useState(false);
 
   const [isOwner, setIsOwner] = useState(false);
   const chainId = Number(NETWORK_ID);
@@ -51,6 +52,12 @@ export const ServiceApproval = () => {
 
     const getMultisigBalance = await multisigContract.getMultisigBalance();
     setSocietyBalance(getMultisigBalance);
+
+    const checkApproved = await multisigContract.isApproved(
+      index,
+      accountData?.address
+    );
+    setIsApproved(checkApproved);
   };
 
   useEffect(() => {
@@ -62,16 +69,12 @@ export const ServiceApproval = () => {
     getSocietyName();
   }, [multisigContract]);
 
-  // useEffect(() => {
-  //   console.log("serviceData", serviceData);
-  // }, [serviceData]);
-
-  // console.log("multisigContract", multisigContract);
-
   const handleAgreePay = async () => {
     setIsPending(true);
     try {
-      const tx = await multisigContract.approveTransactionProposal(0);
+      const tx = await multisigContract.approveTransactionProposal(index, {
+        gasLimit: "1000000",
+      });
       tx.wait(1).then(() => {
         fetchData();
         setIsPending(false);
@@ -85,7 +88,9 @@ export const ServiceApproval = () => {
   const handleDeclinePay = async () => {
     setIsPending(true);
     try {
-      const tx = await multisigContract.revokeApproval(0);
+      const tx = await multisigContract.revokeApproval(index, {
+        gasLimit: "1000000",
+      });
       tx.wait(1).then(() => {
         fetchData();
         setIsPending(false);
@@ -146,19 +151,22 @@ export const ServiceApproval = () => {
                 </p>
               </div>
               {isOwner && (
-                <div className="flex justify-between py-8 w-full">
-                  <button
-                    onClick={() => handleAgreePay()}
-                    className="border-4 border-bbGray-100 bg-bbGreen-200 rounded-md py-2 px-4 font-bold text-xl text-white"
-                  >
-                    Agree to Pay
-                  </button>
-                  <button
-                    onClick={() => handleDeclinePay()}
-                    className="border-4 border-bbGray-100 bg-bbRed-100 rounded-md py-2 px-4 font-bold text-xl text-white"
-                  >
-                    Decline
-                  </button>
+                <div className="py-8 w-full">
+                  {!isApproved ? (
+                    <button
+                      onClick={() => handleAgreePay()}
+                      className="border-4 border-bbGray-100 bg-bbGreen-200 rounded-md py-2 px-4 font-bold text-xl text-white w-full"
+                    >
+                      Agree to Pay
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleDeclinePay()}
+                      className="border-4 border-bbGray-100 bg-bbRed-100 rounded-md py-2 px-4 font-bold text-xl text-white w-full"
+                    >
+                      Decline
+                    </button>
+                  )}
                 </div>
               )}
             </>

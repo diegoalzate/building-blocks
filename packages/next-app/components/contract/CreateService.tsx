@@ -52,7 +52,7 @@ export const CreateService = () => {
       </h1>
 
       <div className="py-12 px-24">
-        <div className="py-8">
+        <div className="py-6">
           <label className="pl-4 text-bbGray-100 font-medium">
             Contractor Address
           </label>
@@ -63,7 +63,7 @@ export const CreateService = () => {
             onChange={(e) => setContractorAddress(e.target.value)}
           />
         </div>
-        <div className="py-8">
+        <div className="py-6">
           <label className="pl-4 text-bbGray-100 font-medium">
             Service Description
           </label>
@@ -75,8 +75,8 @@ export const CreateService = () => {
           />
         </div>
 
-        <div className="py-8">
-          <label className="pl-4 text-bbGray-100 font-medium">Amount</label>
+        <div className="py-6">
+          <label className="pl-4 text-bbGray-100 font-medium">Amount USD</label>
           <input
             className="border-4 m-1 p-2 rounded-lg border-bbGray-100 w-full"
             placeholder="Amount"

@@ -5,6 +5,8 @@ import contracts from "@/contracts/hardhat_contracts.json";
 import { NETWORK_ID, MATIC_USD_PRICEFEED } from "@/config";
 import { ethers } from "ethers";
 
+import { Loading } from "@/components/elements";
+
 type CreateMultisigProps = {
   refetch: () => void;
 };
@@ -57,12 +59,9 @@ export const CreateMultisig = ({ refetch }: CreateMultisigProps) => {
 
   return (
     <div>
-      <h1 className="text-bbGray-100 text-4xl font-bold text-center">
-        Create Society
-      </h1>
       {!creatingMultisig ? (
         <div className="py-12 px-24">
-          <div className="py-8">
+          <div className="py-6">
             <label className="pl-4 text-bbGray-100 font-medium">
               Society Name
             </label>
@@ -73,7 +72,7 @@ export const CreateMultisig = ({ refetch }: CreateMultisigProps) => {
               onChange={(e) => setName(e.target.value)}
             />
           </div>
-          <div className="py-8">
+          <div className="py-6">
             <label className="pl-4 text-bbGray-100 font-medium">
               Deposit Amount in USD
             </label>
@@ -86,7 +85,7 @@ export const CreateMultisig = ({ refetch }: CreateMultisigProps) => {
               onChange={(e) => setDeposit(Number(e.target.value))}
             />
           </div>
-          <div className="py-8">
+          <div className="py-6">
             <label className="pl-4 text-bbGray-100 font-medium">Currency</label>
             <select
               className="border-4 m-1 p-2 rounded-lg border-bbGray-100 w-full"
@@ -108,7 +107,9 @@ export const CreateMultisig = ({ refetch }: CreateMultisigProps) => {
           </div>
         </div>
       ) : (
-        <div className="py-12 px-24">Creating New</div>
+        <div className="mt-12">
+          <Loading />
+        </div>
       )}
     </div>
   );

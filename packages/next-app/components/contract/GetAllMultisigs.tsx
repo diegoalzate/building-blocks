@@ -5,6 +5,8 @@ import { useContract, useSigner, useAccount } from "wagmi";
 import contracts from "@/contracts/hardhat_contracts.json";
 import { NETWORK_ID } from "@/config";
 
+import { Container } from "@/components/elements";
+
 interface multisigProps {
   _contract: string;
 }
@@ -47,10 +49,9 @@ export const GetAllMultisigs = () => {
   };
 
   const handleGetMultisigsForUser = async () => {
-    const result =
-      await multisigFactoryContract.getAllMultisigsWhereUserIsOwner(
-        accountData?.address
-      );
+    const result = await multisigFactoryContract.getMultisigsWhereUserIsMember(
+      accountData?.address
+    );
     console.log("result", result);
   };
 
@@ -67,12 +68,10 @@ export const GetAllMultisigs = () => {
   }, [multisigFactoryContract, totalMultiSigs]);
 
   return (
-    <div className="border p-2">
+    <div className="p-2">
       <div className="flex justify-between">
         <span></span>
-        <h1 className="text-bbGray-100 text-4xl font-bold text-center">
-          All Multisigs
-        </h1>
+        <h1 className="text-bbGray-100 text-4xl font-bold text-center"></h1>
         <button
           className="py-1 px-2 border-2 border-bbGray-100 rounded text-sm font-medium"
           onClick={() => refresh()}
@@ -81,17 +80,19 @@ export const GetAllMultisigs = () => {
         </button>
       </div>
 
-      <div className="my-8">
-        {multisigInfo.map((multisig, index) => (
-          <div key={index}>
-            <button
-              className="cursor-pointer border-2 border-bbGray-100 my-2 py-2 rounded text-bbGray-100 font-medium w-full"
-              onClick={() => router.push(`/multisig/${multisig._contract}`)}
-            >
-              {multisig._contract}
-            </button>
-          </div>
-        ))}
+      <div className="mt-6">
+        <Container>
+          {multisigInfo.map((multisig, index) => (
+            <div key={index} className="w-full">
+              <button
+                className="cursor-pointer border-2 border-bbGray-100 my-2 py-2 rounded text-bbGray-100 hover:bg-bbBlue-100 font-medium w-full"
+                onClick={() => router.push(`/multisig/${multisig._contract}`)}
+              >
+                {multisig._contract}
+              </button>
+            </div>
+          ))}
+        </Container>
       </div>
     </div>
   );

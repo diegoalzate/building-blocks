@@ -1,16 +1,13 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import {
-  useContract,
-  useSigner,
-  useAccount,
-  useContractWrite,
-  erc20ABI,
-} from "wagmi";
+import { useContract, useSigner, useAccount } from "wagmi";
 
 import contracts from "@/contracts/hardhat_contracts.json";
-import { NETWORK_ID, EIGHTEENZERO, WMATIC_TOKEN_ADDRESS } from "@/config";
+import { NETWORK_ID, EIGHTEENZERO } from "@/config";
 import { ethers } from "ethers";
+
+import { Container, Loading } from "@/components/elements";
+import { ExternalLinkIcon } from "@heroicons/react/outline";
 
 export const GetMultiSig = () => {
   const router = useRouter();
@@ -107,10 +104,11 @@ export const GetMultiSig = () => {
   };
 
   const handleDeposit = async () => {
+    setIsPending(true);
     try {
       const tx = await multisigContract.newOwner({
         gasLimit: "1000000",
-        value: maticDepositBigNumber
+        value: maticDepositBigNumber,
       });
       tx.wait(1).then(() => {
         fetchData();
@@ -133,96 +131,108 @@ export const GetMultiSig = () => {
   };
 
   return (
-    <main className="flex flex-col space-y-10 px-4 md:px-40 lg:px-52 xl:px-96 h-screen">
+    <main>
       <h1 className="text-bbGray-100 text-4xl font-bold text-center">
         {societyName}
       </h1>
-      <div className="bg-white border-4 rounded-md border-bbGray-100 flex flex-col space-y-24 p-8 items-center">
-        <div className="flex flex-col space-y-2 text-bbGray-100 font-medium">
-          <p>Contract Address: {address}</p>
-          <p>
-            Society balance: {(societyBalance / EIGHTEENZERO).toFixed(4)} MATIC{" "}
-          </p>
-        </div>
-        {isOwner && (
-          <div className="flex flex-col space-y-2 text-bbGray-100 font-medium w-full">
-            <label className="pl-4 text-bbGray-100 font-medium">
-              Add Member by Address
-            </label>
-            <div className="flex">
-              <input
-                className="border-4 p-2 rounded-lg border-bbGray-100 w-full"
-                placeholder="New Member Address"
-                value={addOwner}
-                onChange={(e) => setAddOwner(e.target.value)}
-              />
-              <button
-                onClick={() => handleAddMember()}
-                className="border-4 border-bbGray-100 bg-bbBlue-200 rounded-md px-2 mx-4 font-bold  text-white"
+      <div className="mt-6">
+        <Container>
+          <div className="flex flex-col space-y-2 text-bbGray-100 font-medium">
+            <p className="flex">
+              Contract Address: {address}{" "}
+              <a
+                href={`https://mumbai.polygonscan.com/address/${address}`}
+                target="_blank"
+                rel="noreferrer noopener"
               >
-                add
-              </button>
-            </div>
+                <ExternalLinkIcon className="text-bbGray-100 h-5 w-5 ml-4" />
+              </a>
+            </p>
+            <p>
+              Society balance: {(societyBalance / EIGHTEENZERO).toFixed(4)}{" "}
+              MATIC{" "}
+            </p>
           </div>
-        )}
-
-        <div className="flex flex-col space-y-4">
-          {isPending ? (
-            <div className="text-center font-semibold text-bbGray-100 text-xl">
-              Transaction Pending...
+          {isOwner && (
+            <div className="flex flex-col space-y-2 text-bbGray-100 font-medium w-full mt-8">
+              <label className="pl-4 text-bbGray-100 font-medium">
+                Add Member by Address
+              </label>
+              <div className="flex">
+                <input
+                  className="border-4 p-2 rounded-lg border-bbGray-100 w-full"
+                  placeholder="New Member Address"
+                  value={addOwner}
+                  onChange={(e) => setAddOwner(e.target.value)}
+                />
+                <button
+                  onClick={() => handleAddMember()}
+                  className="border-4 border-bbGray-100 bg-bbBlue-200 rounded-md px-2 mx-4 font-bold  text-white"
+                >
+                  add
+                </button>
+              </div>
             </div>
-          ) : (
-            <>
-              {isMember && societyDeposit && (
-                <div>
-                  <button
-                    onClick={() => handleDeposit()}
-                    className="border-4 border-bbGray-100 bg-bbYellow-300 rounded-md py-2 px-4 font-bold text-xl"
-                  >
-                    Deposit {societyDeposit} USD
-                  </button>
-                  <div className="text-center text-bbGray-100">
-                    ≈ {maticDeposit.toFixed(4)} MATIC
-                  </div>
-                </div>
-              )}
-              {isOwner && (
-                <>
-                  {!serviceData && (
+          )}
+
+          <div className="flex flex-col space-y-4 mt-12">
+            {isPending ? (
+              <div className="">
+                <Loading />
+              </div>
+            ) : (
+              <>
+                {isMember && societyDeposit && (
+                  <div>
                     <button
-                      onClick={() =>
-                        router.push(`/create-service?contract=${address}`)
-                      }
+                      onClick={() => handleDeposit()}
                       className="border-4 border-bbGray-100 bg-bbYellow-300 rounded-md py-2 px-4 font-bold text-xl"
                     >
-                      Create Service
+                      Deposit {societyDeposit} USD
                     </button>
-                  )}
+                    <div className="text-center text-bbGray-100">
+                      ≈ {maticDeposit.toFixed(4)} MATIC
+                    </div>
+                  </div>
+                )}
+                {isOwner && (
+                  <>
+                    {!serviceData && (
+                      <button
+                        onClick={() =>
+                          router.push(`/create-service?contract=${address}`)
+                        }
+                        className="border-4 border-bbGray-100 bg-bbYellow-300 rounded-md py-2 px-4 font-bold text-xl"
+                      >
+                        Create Service
+                      </button>
+                    )}
 
-                  {serviceData && (
-                    <button
-                      onClick={() =>
-                        router.push(`/pay-service?contract=${address}`)
-                      }
-                      className="border-4 border-bbGray-100 bg-bbBlue-200 rounded-md py-2 px-4 font-bold text-xl text-white"
-                    >
-                      Agree For Service
-                    </button>
-                  )}
+                    {serviceData && (
+                      <button
+                        onClick={() =>
+                          router.push(`/pay-service?contract=${address}`)
+                        }
+                        className="border-4 border-bbGray-100 bg-bbBlue-200 rounded-md py-2 px-4 font-bold text-xl text-white"
+                      >
+                        Agree For Service
+                      </button>
+                    )}
 
-                  {serviceData && serviceData.numApprovals.toString() > 0 && (
-                    <button
-                      onClick={() => handleExcutePayment()}
-                      className="border-4 border-bbGray-100 bg-bbBlue-200 rounded-md py-2 px-4 font-bold text-xl text-white"
-                    >
-                      Excute Payment
-                    </button>
-                  )}
-                </>
-              )}
-            </>
-          )}
-        </div>
+                    {serviceData && serviceData.numApprovals.toString() > 0 && (
+                      <button
+                        onClick={() => handleExcutePayment()}
+                        className="border-4 border-bbGray-100 bg-bbBlue-200 rounded-md py-2 px-4 font-bold text-xl text-white"
+                      >
+                        Excute Payment
+                      </button>
+                    )}
+                  </>
+                )}
+              </>
+            )}
+          </div>
+        </Container>
       </div>
     </main>
   );

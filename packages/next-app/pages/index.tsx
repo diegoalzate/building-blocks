@@ -5,7 +5,7 @@ export default function Home() {
     <div className={""}>
       <Hero />
       <About />
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }

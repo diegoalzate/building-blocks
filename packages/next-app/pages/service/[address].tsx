@@ -1,18 +1,10 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
 import type { NextPage } from "next";
-// import { useConnect } from "wagmi";
-
-// import { Connect, Disconnect, SwitchNetwork } from "@/components/wallet";
-
-// import { useNetwork } from "wagmi";
-// import { NETWORK_ID } from "@/config";
 
 const ServicePage: NextPage = () => {
   const router = useRouter();
   const { address } = router.query;
-  //   const { activeChain } = useNetwork();
-  //   const { activeConnector } = useConnect();
 
   return (
     <div className={""}>

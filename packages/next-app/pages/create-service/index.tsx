@@ -3,7 +3,7 @@ import { CreateService } from "@/components/contract";
 
 const CreateServicePage: NextPage = () => {
   return (
-    <div className={"h-screen"}>
+    <div className="">
       <CreateService />
     </div>
   );

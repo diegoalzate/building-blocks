@@ -82,6 +82,8 @@ contract Multisig {
     // mapping to check if owner has provided Approval for a txn index
     mapping(uint256 => mapping(address => bool)) isApproved;
 
+    mapping(address => uint256) balances;
+
     // modifier to check for owner
     modifier onlyOwner() {
         require(isOwner[msg.sender], "not owner");
@@ -143,7 +145,7 @@ contract Multisig {
         
         isNewMember[msg.sender] = false;
         // add member to the list of owners
-
+        balances[msg.sender] += msg.value;
         owners.push(msg.sender);
         // add new oner to the owner mapping
         isOwner[msg.sender] = true;
@@ -153,6 +155,19 @@ contract Multisig {
         emit NewOwner(msg.sender, deposit, address(this).balance);
     }
 
+    function depositIntoContract() public payable onlyOwner  {
+        require(msg.value > 0, "Deposit needs to be larger than 0");
+        balances[msg.sender] += msg.value;
+    }
+
+    function withdraw() public onlyOwner {
+        require(balances[msg.sender] > 0, "Nothing to withdraw");
+        (bool success, ) = payable(msg.sender).call{value: balances[msg.sender]}("");
+        require(success, "Withdraw: Failed to send matic to user");
+        isOwner[msg.sender] = false;
+        balances[msg.sender] = 0;
+    }
+    
     // function to request payment for service
     function submitTransactionProposal(
         address _to,

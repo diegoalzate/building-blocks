@@ -71,6 +71,7 @@ export const GetMultiSig = () => {
     setSocietyBalance(getMultisigBalance);
 
     try {
+      // console.log(multisigContract);
       const serviceContract = await multisigContract.serviceTransactions(0);
       // console.log("serviceContract", serviceContract);
       if (serviceContract) setServiceData(serviceContract);
@@ -134,6 +135,8 @@ export const GetMultiSig = () => {
       setIsPending(false);
     }
   };
+
+  // console.log("serviceData", serviceData);
 
   return (
     <main>

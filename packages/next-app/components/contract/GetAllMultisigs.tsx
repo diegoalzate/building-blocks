@@ -16,7 +16,6 @@ interface multisigProps {
 export const GetAllMultisigs = () => {
   const router = useRouter();
   const chainId = Number(NETWORK_ID);
-  const [totalMultiSigs, setTotalMultiSigs] = useState(0);
   const [multisigInfo, setMultisigInfo] = useState<Array<multisigProps>>([]);
 
   const { data: signerData } = useSigner();
@@ -37,12 +36,8 @@ export const GetAllMultisigs = () => {
 
   const handleGetAllMultisig = async () => {
     const numMultisigs = await multisigFactoryContract.numMultisigs();
-    setTotalMultiSigs(numMultisigs.toNumber());
-  };
-
-  const handleGetMultisigInfo = async () => {
     const multisigInfo = [];
-    for (let i = 0; i < totalMultiSigs; i++) {
+    for (let i = 0; i < numMultisigs.toNumber(); i++) {
       const getMultisigDetails =
         await multisigFactoryContract.getMultisigDetails(i);
       multisigInfo.push(getMultisigDetails);
@@ -50,24 +45,22 @@ export const GetAllMultisigs = () => {
     setMultisigInfo(multisigInfo);
   };
 
-  const handleGetMultisigsForUser = async () => {
-    const result = await multisigFactoryContract.getMultisigsWhereUserIsMember(
-      accountData?.address
-    );
-    console.log("result", result);
-  };
+  // const handleGetMultisigsForUser = async () => {
+  //   const result = await multisigFactoryContract.getMultisigsWhereUserIsMember(
+  //     accountData?.address
+  //   );
+  //   console.log("result", result);
+  // };
 
   const refresh = async () => {
     await handleGetAllMultisig();
-    await handleGetMultisigInfo();
-    // await handleGetMultisigsForUser();
   };
 
   useEffect(() => {
     if (multisigFactoryContract.signer) {
       refresh();
     }
-  }, [multisigFactoryContract, totalMultiSigs]);
+  }, [multisigFactoryContract]);
 
   return (
     <div className="p-2">

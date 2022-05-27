@@ -152,6 +152,10 @@ contract Multisig {
         // console log balance of new multisig contract
         console.log(getMultisigBalance());
 
+        // redefining number of approvals required to 100% of owners
+        numApprovalsRequired = owners.length;
+        console.log(numApprovalsRequired);
+
         emit NewOwner(msg.sender, deposit, address(this).balance);
     }
 

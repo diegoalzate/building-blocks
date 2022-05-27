@@ -80,7 +80,7 @@ contract Multisig {
     // mapping(uint256 => ServiceTransaction) serviceTransactionsMaps;
 
     // mapping to check if owner has provided Approval for a txn index
-    mapping(uint256 => mapping(address => bool)) isApproved;
+    mapping(uint256 => mapping(address => bool)) public isApproved;
 
     mapping(address => uint256) balances;
 
@@ -285,5 +285,9 @@ contract Multisig {
     
     function getPriceConverter() public view returns (uint256) {
         return deposit.getConversionRate(s_priceFeed);
+    }
+
+    function getServiceTransactions() public view returns (ServiceTransaction[] memory) {
+        return serviceTransactions;
     }
 }

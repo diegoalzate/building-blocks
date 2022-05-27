@@ -3,8 +3,13 @@ import { useRouter } from "next/router";
 import { useContract, useSigner, useAccount } from "wagmi";
 
 import contracts from "@/contracts/hardhat_contracts.json";
-import { NETWORK_ID } from "@/config";
+import { NETWORK_ID, EIGHTEENZERO } from "@/config";
 import { ethers } from "ethers";
+
+import { Container, Loading } from "@/components/elements";
+import { ExternalLinkIcon } from "@heroicons/react/outline";
+
+import { addressShortener } from "@/utils/addressShortener";
 
 export const ServiceApproval = () => {
   const router = useRouter();
@@ -12,6 +17,9 @@ export const ServiceApproval = () => {
 
   const [societyName, setSocietyName] = useState("");
   const [serviceData, setServiceData] = useState<any>();
+  const [societyBalance, setSocietyBalance] = useState(0);
+  const [isPending, setIsPending] = useState(false);
+
   const [isOwner, setIsOwner] = useState(false);
   const chainId = Number(NETWORK_ID);
 
@@ -28,10 +36,10 @@ export const ServiceApproval = () => {
     signerOrProvider: signerData || undefined,
   });
 
-  console.log("multisigContract", multisigContract);
+  // console.log("multisigContract", multisigContract);
 
   const fetchData = async () => {
-    console.log("fetchData");
+    // console.log("fetchData");
     const name = await multisigContract.societyName();
     setSocietyName(name);
 
@@ -39,8 +47,10 @@ export const ServiceApproval = () => {
     setIsOwner(owner);
 
     const serviceContract = await multisigContract.serviceTransactions(0);
-    console.log("serviceContract", serviceContract);
     setServiceData(serviceContract);
+
+    const getMultisigBalance = await multisigContract.getMultisigBalance();
+    setSocietyBalance(getMultisigBalance);
   };
 
   useEffect(() => {
@@ -52,35 +62,37 @@ export const ServiceApproval = () => {
     getSocietyName();
   }, [multisigContract]);
 
-  useEffect(() => {
-    console.log("serviceData", serviceData);
-  }, [serviceData]);
+  // useEffect(() => {
+  //   console.log("serviceData", serviceData);
+  // }, [serviceData]);
 
   // console.log("multisigContract", multisigContract);
 
   const handleAgreePay = async () => {
-    console.log("handleAgreePay");
+    setIsPending(true);
     try {
       const tx = await multisigContract.approveTransactionProposal(0);
-      tx.wait(1).then((res: any) => {
-        console.log("res", res);
+      tx.wait(1).then(() => {
         fetchData();
+        setIsPending(false);
       });
     } catch (e) {
       console.log("error", e);
+      setIsPending(false);
     }
   };
 
   const handleDeclinePay = async () => {
-    console.log("handleDeclinePay");
+    setIsPending(true);
     try {
       const tx = await multisigContract.revokeApproval(0);
-      tx.wait(1).then((res: any) => {
-        console.log("res", res);
+      tx.wait(1).then(() => {
         fetchData();
+        setIsPending(false);
       });
     } catch (e) {
       console.log("error", e);
+      setIsPending(false);
     }
   };
 
@@ -88,35 +100,64 @@ export const ServiceApproval = () => {
   return (
     <div>
       <h1 className="text-bbGray-100 text-4xl font-bold text-center">
-        Pay Service
+        Service Approval
       </h1>
-
-      <div className="my-4 md:my-12 mx-4 md:mx-24 p-4 md:p-8 bg-white border-4 border-bbGray-100 rounded-lg">
-        <div className="text-bbGray-100 font-medium">
-          <p className="py-2">Society Name : {societyName}</p>
-          <p className="py-2">Society Balance :</p>
-          <p className="py-2">Contractor Address : {serviceData.to}</p>
-          <p className="py-2">Service Description : {serviceData.data}</p>
-          <p className="py-2">
-            Service Amount : {ethers.utils.formatEther(serviceData.amount.toString())} MATIC
-          </p>
-        </div>
-        {isOwner && (
-          <div className="flex justify-between py-8">
-            <button
-              onClick={() => handleAgreePay()}
-              className="border-4 border-bbGray-100 bg-bbGreen-200 rounded-md py-2 px-4 font-bold text-xl text-white"
-            >
-              Agree to Pay
-            </button>
-            <button
-              onClick={() => handleDeclinePay()}
-              className="border-4 border-bbGray-100 bg-bbRed-100 rounded-md py-2 px-4 font-bold text-xl text-white"
-            >
-              Decline
-            </button>
-          </div>
-        )}
+      <div className="mt-6">
+        <Container>
+          {!isPending ? (
+            <>
+              <div className="text-bbGray-100 font-medium">
+                <p className="py-2">Society Name : {societyName}</p>
+                <p className="py-2">
+                  Society Balance :
+                  <span className="pl-4 pr-2">
+                    {(societyBalance / EIGHTEENZERO).toFixed(4)}
+                  </span>
+                  MATIC
+                </p>
+                <p className="py-2 flex">
+                  Contractor Address :
+                  <span className="pl-2">
+                    {addressShortener(serviceData.to)}
+                  </span>
+                  <a
+                    href={`https://mumbai.polygonscan.com/address/${serviceData.to}`}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    <ExternalLinkIcon className="text-bbGray-100 h-5 w-5 ml-4 mt-0.5 hover:text-bbBlue-200" />
+                  </a>
+                </p>
+                <p className="py-2">Service Description : {serviceData.data}</p>
+                <p className="py-2">
+                  Service Amount :{" "}
+                  {ethers.utils.formatEther(serviceData.amount.toString())}{" "}
+                  MATIC
+                </p>
+              </div>
+              {isOwner && (
+                <div className="flex justify-between py-8 w-full">
+                  <button
+                    onClick={() => handleAgreePay()}
+                    className="border-4 border-bbGray-100 bg-bbGreen-200 rounded-md py-2 px-4 font-bold text-xl text-white"
+                  >
+                    Agree to Pay
+                  </button>
+                  <button
+                    onClick={() => handleDeclinePay()}
+                    className="border-4 border-bbGray-100 bg-bbRed-100 rounded-md py-2 px-4 font-bold text-xl text-white"
+                  >
+                    Decline
+                  </button>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="">
+              <Loading />
+            </div>
+          )}
+        </Container>
       </div>
     </div>
   );

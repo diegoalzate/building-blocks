@@ -11,6 +11,8 @@ import { ExternalLinkIcon } from "@heroicons/react/outline";
 import contracts from "@/contracts/hardhat_contracts.json";
 import { NETWORK_ID } from "@/config";
 
+import { addressShortener } from "@/utils/addressShortener";
+
 type AppLayoutProps = {
   children: React.ReactNode;
 };
@@ -24,7 +26,7 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
     allContracts[chainId][0].contracts.MultisigFactory.address;
 
   return (
-    <div className="bg-bbYellow-100 h-screen">
+    <div className="bg-bbYellow-100 h-screen flex flex-col overflow-y-hidden">
       <Head>
         <title>Building Blocks</title>
         <meta name="description" content="Building Blocks" />
@@ -43,11 +45,9 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
           <ConnectButton />
         </div>
       </header>
-      <main>{children}</main>
-      <footer className="my-4 bottom-0">
-        <div className="flex justify-center py-2 font-medium">
-          Factory Contract
-        </div>
+      <main className="flex-grow overflow-y-auto">{children}</main>
+      <footer className="m-2 h-12">
+        <div className="flex justify-center font-medium">Factory Contract</div>
         <div className="flex justify-center font-medium text-bbGray-100 hover:text-bbBlue-200">
           <a
             href={`https://mumbai.polygonscan.com/address/${multisigFactoryAddress}`}
@@ -55,8 +55,11 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
             rel="noreferrer noopener"
             className="flex"
           >
-            {multisigFactoryAddress}{" "}
-            <ExternalLinkIcon className=" h-5 w-5 ml-4" />
+            <span className="hidden sm:block">{multisigFactoryAddress}</span>
+            <span className="block sm:hidden">
+              {addressShortener(multisigFactoryAddress)}
+            </span>{" "}
+            <ExternalLinkIcon className="mt-0.5 h-5 w-5 ml-4" />
           </a>
         </div>
       </footer>

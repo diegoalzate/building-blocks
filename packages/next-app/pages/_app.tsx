@@ -13,8 +13,11 @@ import "@rainbow-me/rainbowkit/styles.css";
 import {
   getDefaultWallets,
   RainbowKitProvider,
+  Theme,
+  lightTheme,
   Chain,
 } from "@rainbow-me/rainbowkit";
+import merge from "lodash.merge";
 
 import { useIsMounted } from "@/hooks";
 
@@ -54,13 +57,19 @@ const wagmiClient = createClient({
   provider,
 });
 
+const customTheme: Theme = merge(lightTheme(), {
+  colors: {
+    accentColor: "#009379",
+  },
+});
+
 const App = ({ Component, pageProps }: AppProps) => {
   const isMounted = useIsMounted();
 
   if (!isMounted) return null;
   return (
     <WagmiConfig client={wagmiClient}>
-      <RainbowKitProvider coolMode chains={chains}>
+      <RainbowKitProvider coolMode chains={chains} theme={customTheme}>
         <NextHead>
           <title>Building Blocks</title>
         </NextHead>

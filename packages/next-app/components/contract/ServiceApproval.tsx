@@ -7,7 +7,7 @@ import { NETWORK_ID, EIGHTEENZERO } from "@/config";
 import { ethers } from "ethers";
 
 import { Container, Loading } from "@/components/elements";
-import { ExternalLinkIcon } from "@heroicons/react/outline";
+import { ExternalLinkIcon, BackspaceIcon } from "@heroicons/react/outline";
 
 import { addressShortener } from "@/utils/addressShortener";
 
@@ -99,9 +99,19 @@ export const ServiceApproval = () => {
   if (!serviceData) return null;
   return (
     <div>
-      <h1 className="text-bbGray-100 text-4xl font-bold text-center">
-        Service Approval
-      </h1>
+      <div className="flex justify-between px-4 mx-auto lg:max-w-3xl xl:max-w-4xl">
+        <span className="my-auto">
+          <BackspaceIcon
+            onClick={() => router.push(`multisig/${contract}`)}
+            className="text-bbGray-100 h-10 w-10 mt-1 hover:text-bbBlue-200 cursor-pointer"
+          />
+        </span>
+        <h1 className="text-bbGray-100 text-4xl font-bold text-center">
+          Service Approval
+        </h1>
+        <span></span>
+      </div>
+
       <div className="mt-6">
         <Container>
           {!isPending ? (

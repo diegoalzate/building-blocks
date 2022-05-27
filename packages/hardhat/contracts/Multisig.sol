@@ -5,9 +5,17 @@ pragma solidity ^0.8.10;
 import "hardhat/console.sol";
 import "./PriceConverter.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "./NFTMinter.sol";
+
+interface INFTMinter {
+    function mint(address recipient, uint256 _tokenId, string memory _tokenURI) external;
+}
 
 contract Multisig {
-    using PriceConverter for uint256; 
+    using PriceConverter for uint256;
+
+    address nftMinterAddress;
+
     event NewOwner(
         address indexed owner,
         uint256 depositAmount,
@@ -51,6 +59,8 @@ contract Multisig {
     
     // struct for intiating a transaction to pay for a service
     struct ServiceTransaction {
+        // transaction Id
+        uint256 tokenId;
         // address to be paid
         address to;
         // amount to be paid
@@ -153,6 +163,7 @@ contract Multisig {
 
         serviceTransactions.push(
             ServiceTransaction({
+                tokenId: txIndex,
                 to: _to,
                 // amount: _amount * 10 ** 18,
                 amount: _amount,
@@ -228,7 +239,20 @@ contract Multisig {
         (bool success, ) = payable(serviceTransaction.to).call{value: serviceTransaction.amount.getConversionRate(s_priceFeed)}("");
         require(success, "Transaction failed");
         serviceTransaction.executed = true;
+
         emit ExecuteTransaction(msg.sender, _txIndex);
+    }
+
+    function setNFTMinterAddress(address _nftMinter) public {
+        nftMinterAddress = _nftMinter;
+    }
+
+    function mintTransactionAsNFT(uint256 _txIndex, string memory _uri) 
+    public
+    onlyOwner
+    txExists(_txIndex)
+    {
+        INFTMinter(nftMinterAddress).mint(address(this), _txIndex, _uri);
     }
 
     // function to get owners

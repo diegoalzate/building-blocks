@@ -14,12 +14,10 @@ interface multisigProps {
 }
 
 export const GetAllMultisigs = () => {
-  const router = useRouter();
   const chainId = Number(NETWORK_ID);
   const [multisigInfo, setMultisigInfo] = useState<Array<multisigProps>>([]);
 
   const { data: signerData } = useSigner();
-  const { data: accountData } = useAccount();
 
   const allContracts = contracts as any;
   const multisigFactoryAddress =
@@ -44,13 +42,6 @@ export const GetAllMultisigs = () => {
     }
     setMultisigInfo(multisigInfo);
   };
-
-  // const handleGetMultisigsForUser = async () => {
-  //   const result = await multisigFactoryContract.getMultisigsWhereUserIsMember(
-  //     accountData?.address
-  //   );
-  //   console.log("result", result);
-  // };
 
   const refresh = async () => {
     await handleGetAllMultisig();
@@ -78,20 +69,57 @@ export const GetAllMultisigs = () => {
       <div className="mt-6">
         <Container>
           {multisigInfo.map((multisig, index) => (
-            <div key={index} className="w-full">
-              <button
-                className="cursor-pointer border-2 border-bbGray-100 my-2 py-2 rounded text-bbGray-100 hover:bg-bbBlue-100 font-medium w-full"
-                onClick={() => router.push(`/multisig/${multisig._contract}`)}
-              >
-                <span className="hidden sm:block">{multisig._contract}</span>
-                <span className="block sm:hidden">
-                  {addressShortener(multisig._contract)}
-                </span>
-              </button>
-            </div>
+            <MultisigItem key={index} contract={multisig._contract} />
           ))}
         </Container>
       </div>
     </div>
+  );
+};
+
+interface MultisigItemProps {
+  contract: string;
+}
+
+const MultisigItem = ({ contract }: MultisigItemProps) => {
+  const [showContract, setShowContract] = useState(false);
+  const router = useRouter();
+  const chainId = Number(NETWORK_ID);
+
+  const allContracts = contracts as any;
+  const multisigABI = allContracts[chainId][0].contracts.Multisig.abi;
+
+  const { data: signerData } = useSigner();
+  const { data: accountData } = useAccount();
+
+  const multisigContract = useContract({
+    addressOrName:
+      (contract as string) || "0x0000000000000000000000000000000000000000",
+    contractInterface: multisigABI,
+    signerOrProvider: signerData || undefined,
+  });
+
+  useEffect(() => {
+    if (multisigContract.signer) {
+      const checkUser = async () => {
+        const owner = await multisigContract.isOwner(accountData?.address);
+        const member = await multisigContract.isNewMember(accountData?.address);
+        if (owner || member) {
+          setShowContract(true);
+        }
+      };
+      checkUser();
+    }
+  }, [multisigContract]);
+
+  if (!showContract) return null;
+  return (
+    <button
+      className="cursor-pointer border-2 border-bbGray-100 my-2 py-2 rounded text-bbGray-100 hover:bg-bbBlue-100 font-medium w-full"
+      onClick={() => router.push(`/multisig/${contract}`)}
+    >
+      <span className="hidden sm:block">{contract}</span>
+      <span className="block sm:hidden">{addressShortener(contract)}</span>
+    </button>
   );
 };

@@ -82,7 +82,7 @@ contract Multisig {
     // mapping to check if owner has provided Approval for a txn index
     mapping(uint256 => mapping(address => bool)) public isApproved;
 
-    mapping(address => uint256) balances;
+    mapping(address => uint256) public balances;
 
     // modifier to check for owner
     modifier onlyOwner() {
@@ -170,6 +170,21 @@ contract Multisig {
         require(success, "Withdraw: Failed to send matic to user");
         isOwner[msg.sender] = false;
         balances[msg.sender] = 0;
+        for (uint i = 0; i < owners.length - 1; i++) {
+            if (owners[i] == msg.sender) {
+                removeFromOwners(i);
+                break;
+            }
+        }
+        numApprovalsRequired = owners.length;
+    }
+    
+    function removeFromOwners(uint index) public {
+        delete owners[index];
+        // Move the last element into the place to delete
+        owners[index] = owners[owners.length - 1];
+        // Remove the last element
+        owners.pop();
     }
     
     // function to request payment for service
@@ -285,6 +300,10 @@ contract Multisig {
     
     function getPriceConverter() public view returns (uint256) {
         return deposit.getConversionRate(s_priceFeed);
+    }
+
+     function getPriceOfUsd(uint _amount) public view returns (uint256) {
+        return _amount.getConversionRate(s_priceFeed);
     }
 
     function getServiceTransactions() public view returns (ServiceTransaction[] memory) {

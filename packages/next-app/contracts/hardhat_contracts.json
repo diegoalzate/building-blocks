@@ -5,7 +5,7 @@
       "chainId": "80001",
       "contracts": {
         "MultisigFactory": {
-          "address": "0xb1C33c5EF92017A57D80E8FB67400D23EB2743cF",
+          "address": "0xa5A3B4A2Af4ed52C4f9b081EDB0bD4ed2109DBF1",
           "abi": [
             {
               "anonymous": false,
@@ -200,7 +200,7 @@
           ]
         },
         "Multisig": {
-          "address": "0x0A7565a44bf08884a044D5e6e168e643BbDb6C1E",
+          "address": "0x593c7FFe4a9437EB3442Ffb9bbFda7f23D644D05",
           "abi": [
             {
               "inputs": [
@@ -374,6 +374,25 @@
               "type": "function"
             },
             {
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "",
+                  "type": "address"
+                }
+              ],
+              "name": "balances",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
               "inputs": [],
               "name": "deposit",
               "outputs": [
@@ -435,6 +454,25 @@
             {
               "inputs": [],
               "name": "getPriceConverter",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "_amount",
+                  "type": "uint256"
+                }
+              ],
+              "name": "getPriceOfUsd",
               "outputs": [
                 {
                   "internalType": "uint256",
@@ -607,6 +645,19 @@
                 }
               ],
               "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "index",
+                  "type": "uint256"
+                }
+              ],
+              "name": "removeFromOwners",
+              "outputs": [],
+              "stateMutability": "nonpayable",
               "type": "function"
             },
             {

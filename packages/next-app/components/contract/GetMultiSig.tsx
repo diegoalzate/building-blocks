@@ -26,7 +26,8 @@ export const GetMultiSig = () => {
   const [societyDeposit, setSocietyDeposit] = useState(0);
   const [maticDeposit, setMaticDeposit] = useState(0);
   const [maticDepositBigNumber, setMaticDepositBigNumber] = useState<any>();
-
+  const [extraDeposit, setExtraDepoist] = useState(0);
+  const [userBalanceInSociety, setUserBalanceInSociety] = useState(0);
   const [addOwner, setAddOwner] = useState("");
   const [societyBalance, setSocietyBalance] = useState(0);
   const [allServices, setAllServices] = useState<any>();
@@ -71,6 +72,9 @@ export const GetMultiSig = () => {
     const getMultisigBalance = await multisigContract.getMultisigBalance();
     setSocietyBalance(getMultisigBalance);
 
+    const userBalance = await multisigContract.balances(accountData?.address);
+    setUserBalanceInSociety(userBalance);
+
     try {
       const getServiceTransactions =
         await multisigContract.getServiceTransactions();
@@ -105,6 +109,35 @@ export const GetMultiSig = () => {
       console.log("error", e);
     }
   };
+
+  const handleExtraDeposit = async () => {
+    try {
+      const amountInMatic = await multisigContract.getPriceOfUsd(
+        ethers.utils.parseEther(extraDeposit.toString())
+      );
+      const tx = await multisigContract.depositIntoContract({
+        gasLimit: "1000000",
+        value: amountInMatic,
+      });
+      tx.wait(1).then(() => {
+        fetchData();
+        setExtraDepoist(0); 
+      });
+    } catch (e) {
+      console.log("error", e);
+    }
+  };
+
+  const handleWithdraw = async () => {
+    try {
+      const tx = await multisigContract.withdraw();
+      tx.wait(1).then(() => {
+        fetchData();
+      });
+    } catch (e) {
+      console.log("error", e);
+    }
+  }
 
   const handleDeposit = async () => {
     setIsPending(true);
@@ -167,34 +200,72 @@ export const GetMultiSig = () => {
                 </a>
               </span>
             </p>
-            <p>
-              Balance:
-              <span className="pl-4 pr-2">
-                {(societyBalance / EIGHTEENZERO).toFixed(4)}
-              </span>
-              MATIC
-            </p>
+            <div className="flex flex-col">
+              <p>
+                Balance:
+                <span className="pl-4 pr-2">
+                  {(societyBalance / EIGHTEENZERO).toFixed(4)}
+                </span>
+                MATIC
+              </p>
+              <p>
+                Your Balance:
+                <span className="pl-4 pr-2">
+                  {(userBalanceInSociety / EIGHTEENZERO).toFixed(4)}
+                </span>
+                MATIC
+              </p>
+            </div>
           </div>
           {isOwner && (
-            <div className="flex flex-col space-y-2 text-bbGray-100 font-medium w-full mt-4">
-              <label className="pl-4 text-bbGray-100 font-medium">
-                Add Member by Address
-              </label>
-              <div className="flex">
-                <input
-                  className="border-4 p-2 rounded-lg border-bbGray-100 w-full"
-                  placeholder="New Member Address"
-                  value={addOwner}
-                  onChange={(e) => setAddOwner(e.target.value)}
-                />
-                <button
-                  onClick={() => handleAddMember()}
-                  className="border-4 border-bbGray-100 bg-bbBlue-200 rounded-md px-2 mx-4 font-bold  text-white"
-                >
-                  add
-                </button>
+            <>
+              <div className="flex flex-col space-y-2 text-bbGray-100 font-medium w-full mt-4">
+                <label className="pl-4 text-bbGray-100 font-medium">
+                  Deposit into wallet
+                </label>
+                <div className="flex">
+                  <input
+                    className="border-4 p-2 rounded-lg border-bbGray-100 w-1/2"
+                    placeholder="despoit amount in usd"
+                    type={'number'}
+                    min={0}
+                    value={extraDeposit}
+                    onChange={(e) => setExtraDepoist(Number(e.target.value))}
+                  />
+                  <button
+                    onClick={() => handleExtraDeposit()}
+                    className="border-4 border-bbGray-100 bg-bbBlue-200 rounded-md px-2 mx-4 font-bold  text-white"
+                  >
+                    desposit
+                  </button>
+                  <button
+                    onClick={() => handleWithdraw()}
+                    className="border-4 border-bbGray-100 bg-bbBlue-200 rounded-md px-2 mx-4 font-bold  text-white"
+                  >
+                    withdraw your balance
+                  </button>
+                </div>
               </div>
-            </div>
+              <div className="flex flex-col space-y-2 text-bbGray-100 font-medium w-full mt-4">
+                <label className="pl-4 text-bbGray-100 font-medium">
+                  Add Member by Address
+                </label>
+                <div className="flex">
+                  <input
+                    className="border-4 p-2 rounded-lg border-bbGray-100 w-full"
+                    placeholder="New Member Address"
+                    value={addOwner}
+                    onChange={(e) => setAddOwner(e.target.value)}
+                  />
+                  <button
+                    onClick={() => handleAddMember()}
+                    className="border-4 border-bbGray-100 bg-bbBlue-200 rounded-md px-2 mx-4 font-bold  text-white"
+                  >
+                    add
+                  </button>
+                </div>
+              </div>
+            </>
           )}
 
           <div className="mt-8 w-full">

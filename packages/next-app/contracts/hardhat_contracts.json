@@ -5,7 +5,7 @@
       "chainId": "80001",
       "contracts": {
         "MultisigFactory": {
-          "address": "0xa5A3B4A2Af4ed52C4f9b081EDB0bD4ed2109DBF1",
+          "address": "0x9583ab9b5E143cc28d66E8C923DF2888935b811E",
           "abi": [
             {
               "anonymous": false,
@@ -200,7 +200,7 @@
           ]
         },
         "Multisig": {
-          "address": "0x593c7FFe4a9437EB3442Ffb9bbFda7f23D644D05",
+          "address": "0xA7c46356994ED5aa0e617222510A392ae6DBdF78",
           "abi": [
             {
               "inputs": [

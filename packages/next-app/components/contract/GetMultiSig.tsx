@@ -58,7 +58,9 @@ export const GetMultiSig = () => {
     const priceConvert = await multisigContract.getPriceConverter();
     const priceConvertAmount = Number(ethers.utils.formatEther(priceConvert));
     setMaticDepositBigNumber(
-      Math.round(priceConvertAmount * EIGHTEENZERO).toString()
+      Math.round(
+        (priceConvertAmount + priceConvertAmount * 0.1) * EIGHTEENZERO
+      ).toString()
     );
     setMaticDeposit(priceConvertAmount);
 

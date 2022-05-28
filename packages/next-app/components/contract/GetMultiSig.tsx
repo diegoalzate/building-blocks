@@ -121,7 +121,7 @@ export const GetMultiSig = () => {
       });
       tx.wait(1).then(() => {
         fetchData();
-        setExtraDepoist(0);
+        setExtraDepoist(0); 
       });
     } catch (e) {
       console.log("error", e);

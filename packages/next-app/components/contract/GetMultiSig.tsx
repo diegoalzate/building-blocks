@@ -58,9 +58,7 @@ export const GetMultiSig = () => {
     const priceConvert = await multisigContract.getPriceConverter();
     const priceConvertAmount = Number(ethers.utils.formatEther(priceConvert));
     setMaticDepositBigNumber(
-      Math.round(
-        (priceConvertAmount + priceConvertAmount * 0.12) * EIGHTEENZERO
-      ).toString()
+      Math.round(priceConvertAmount * EIGHTEENZERO).toString()
     );
     setMaticDeposit(priceConvertAmount);
 
@@ -121,7 +119,7 @@ export const GetMultiSig = () => {
       });
       tx.wait(1).then(() => {
         fetchData();
-        setExtraDepoist(0); 
+        setExtraDepoist(0);
       });
     } catch (e) {
       console.log("error", e);
@@ -137,7 +135,7 @@ export const GetMultiSig = () => {
     } catch (e) {
       console.log("error", e);
     }
-  }
+  };
 
   const handleDeposit = async () => {
     setIsPending(true);
@@ -227,7 +225,7 @@ export const GetMultiSig = () => {
                   <input
                     className="border-4 p-2 rounded-lg border-bbGray-100 w-1/2"
                     placeholder="despoit amount in usd"
-                    type={'number'}
+                    type={"number"}
                     min={0}
                     value={extraDeposit}
                     onChange={(e) => setExtraDepoist(Number(e.target.value))}

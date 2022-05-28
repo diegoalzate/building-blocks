@@ -206,20 +206,20 @@ export const GetMultiSig = () => {
                 </span>
                 MATIC
               </p>
-              <p>
+              {/* <p>
                 Your Balance:
                 <span className="pl-4 pr-2">
                   {(userBalanceInSociety / EIGHTEENZERO).toFixed(4)}
                 </span>
                 MATIC
-              </p>
+              </p> */}
             </div>
           </div>
           {isOwner && (
             <>
-              <div className="flex flex-col space-y-2 text-bbGray-100 font-medium w-full mt-4">
+              {/* <div className="flex flex-col space-y-2 text-bbGray-100 font-medium w-full mt-4">
                 <label className="pl-4 text-bbGray-100 font-medium">
-                  Deposit into wallet
+                  Deposit Amount in USD
                 </label>
                 <div className="flex">
                   <input
@@ -243,7 +243,7 @@ export const GetMultiSig = () => {
                     withdraw your balance
                   </button>
                 </div>
-              </div>
+              </div> */}
               <div className="flex flex-col space-y-2 text-bbGray-100 font-medium w-full mt-4">
                 <label className="pl-4 text-bbGray-100 font-medium">
                   Add Member by Address

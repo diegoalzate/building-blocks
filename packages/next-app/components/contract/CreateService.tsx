@@ -85,7 +85,7 @@ export const CreateService = () => {
 
           <div className="py-4">
             <label className="pl-4 text-bbGray-100 font-medium">
-              Amount USD
+              Amount in USD
             </label>
             <input
               className="border-4 m-1 p-2 rounded-lg border-bbGray-100 w-full"
